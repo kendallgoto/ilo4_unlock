@@ -44,18 +44,19 @@ for patch in patches:
         if "noDecode" in patch:
             prev_data = patch["prev_data"]
         else:
-            prev_data = patch["prev_data"].decode("hex")
-        print(ilo4.hexdump(check_data))
-        print(ilo4.hexdump(prev_data))
+            prev_data = ("".join(patch["prev_data"].split())).decode("hex")
         if check_data != prev_data:
+            print ilo4.hexdump(prev_data)
+            print ilo4.hexdump(check_data)
             print "[-] Error, bad file content at offset %x" % offs
             sys.exit(1)
 
-    if patch["decode"] is None:
+    if "noDecode" in patch:
         patch_data = patch["patch"]
     else:
-        patch_data = patch["patch"].decode("hex")
-
+        patch_data = ("".join(patch["patch"].split())).decode("hex")
+    print ilo4.hexdump(check_data)
+    print ilo4.hexdump(patch_data)
     data = data[:offs] + patch_data + data[endOffs:]
 
 data = data
