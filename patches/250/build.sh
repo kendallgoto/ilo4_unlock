@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+set -e
 if [ $# -ne 2 ]; then
     echo "usage: $0 <firmware.bin> <build-dir>"
     exit 1
