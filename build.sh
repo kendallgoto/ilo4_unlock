@@ -53,8 +53,7 @@ do_init() {
 			sh temp.csexe --unpack=archivetemp > /dev/null
 			cp archivetemp/ilo4_*.bin ./binaries/
 			if [ "$SHORT_NAME" = "250" ]; then
-				cp archivetemp/flash_ilo4 ./binaries/flasher
-				chmod +x ./binaries/flasher
+				cp archivetemp/flash_ilo4 archivetemp/CP027911.xml ./binaries/
 			fi
 			rm -rf archivetemp
 			rm temp.csexe

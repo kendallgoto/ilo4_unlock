@@ -9,14 +9,59 @@ There is risk for potential damage to your system when utilizing this code. If a
 This repo does not contain any iLO 4 binaries; unmodified or patched as they are owned by HP. Websites have, in the past, been served with cease and desist orders from HP for hosting iLO binaries. For security purposes, I encourage you to follow the steps listed to build the patched version of the iLO yourself, while verifying the contents of the patched code.
 
 ## Getting Started
+Python 2.7 is required. I built everything on CentOS 8; Other OS/environments might have different requirements. If your setup takes extra effort, please let me know and I'll document it.
 
-## Installation
+_pro tip! if you're doing this all on a Live CD to flash, make sure you disable iLO security first, or you'll have to restart. See Flashing Firmware for more info_
+
+Here is my setup for my Ubuntu 21.10 Live CD:
+```bash
+sudo apt-add-repository universe
+sudo apt update
+sudo apt-get install python2-minimal git curl
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && sudo python2 get-pip.py
+python2 -m pip install virtualenv
+git clone --recurse-submodules https://github.com/kendallgoto/ilo4_unlock.git
+cd ilo4_unlock
+python2 -m virtualenv venv
+source venv/bin/activate
+```
+
+## Building Firmware
+``` bash
+./build.sh init # download necessary HPE binaries
+#./build.sh 250/273/279 -- see patches/ folder for more info on each patch!
+./build.sh 279  # generate iLO v2.79 patched firmware
+# The build setup creates a build/ folder where all the artifacts are stored. The final firmware location will be printed at the end of the script, if no errors are produced first.
+```
+## Flashing Firmware
+The resulting firmware is located in the `build` directory, under the firmware's name (e.g. `build/ilo4_273.bin.patched` for v2.73 builds). I suggest the following steps to flash the firmware, as you cannot do it from the web interface:
+1. Copy the resulting firmware to a USB key, along with the flasher files (`binaries/flash_ilo4` & `binaries/CP027911.xml`)
+2. Enable iLO4 Security Override (for me, this was flipping the first DIP switch on the board).
+3. Boot your server from a baremetal Linux install -- a Ubuntu LiveCD works well.
+4. Ensure any HP modules are unloaded (`sudo modprobe -r hpilo`)
+5. Plug in the USB key, rename the firmware to `ilo4_250.bin`, then run `sudo ./flasher --direct` to patch your server.
+6. Resist the urge to unplug the system and break everything while flashing. **It will be loud**. It took 2 minutes to erase, and 1 minute to flash.
+7. After patching, shut down and disable the iLO4 security override.
+
+Following the Getting Started steps, here's what I did after building:
+```bash
+sudo mobprobe -r hpilo
+mkdir -p flash
+cp binaries/flash_ilo4 binaries/CP027911.xml flash/
+cp build/ilo4_279.bin.patched flash/ilo4_250.bin
+cd flash
+sudo ./flash_ilo4 --direct
+# wait until the fans spin down ...
+sudo shutdown now # disable the security override after shutting down!
+```
+
 
 ## Use
+Some documented features coming soon -- however, the relevant reading below has a lot of great community insights.
 
 ## Credits
 - Thanks to the work of [Airbus Security Lab](https://github.com/airbus-seclab/ilo4_toolbox); whose previous work exploring iLO 4 & 5 was instrumental in allowing the development of modified iLO firmware.
-- And to [/u/phoenixdev](https://www.reddit.com/user/phoenixdev), whose original work on iLO4 v2.60 and v2.73 allowed for fans to be controlled in the first place.
+- And to [/u/phoenixdev](https://www.reddit.com/user/phoenixdev), whose original work on iLO4 v2.60 and v2.73 allowed for fans to be controlled in the first place.  
 This repository utilizes modified code from the iLO4 Toolbox. The toolkit invokes code directly from the iLO4 Toolbox, as well as includes modified versions of Airbus Security Lab's original patching code to perform the necessary patches. It also utilizes code originally written by [/u/phoenixdev](https://www.reddit.com/user/phoenixdev) that was reverse-engineered from their patched v2.73 iLO4 firmware.
 
 The full documentation on how this code base was derived is fully detailed [in the research/ folder](research/readme.md).
