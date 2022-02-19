@@ -2,7 +2,7 @@
 To the best of my ability, I've documented the patched bytes included in the patch_userland.json file below.
 
 ## Bypass signature check : BEQ XX -> B XX
-By patching the signature check in the userland, we're able to upload arbitrary firmware. This is a very similar change to the one we make in the kernel, except this validates the firmware after web upload, where the kernel change validates the firmware at boot. TODO I believe this allows us to upload arbitrary firmware from the web UI.
+By patching the signature check in the userland, we're able to upload arbitrary firmware. This is a very similar change to the one we make in the kernel, except this validates the firmware after web upload, where the kernel change validates the firmware at boot. I'm not sure what the purpose of this code is - maybe to make it easier for /u/phoenixdev to work on changes? But the signature bypass didn't work in practice for me & I don't see this bypass in Airbus' research ... I might remove it for v2.79.
 
 ## Rename `quit` to `OCBB`
 In our table of commands, we must remove some known commands to make room for our new commands. Since `quit` is the same as `exit`, we can replace it with OCBB.
