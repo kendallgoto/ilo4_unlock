@@ -6,7 +6,7 @@ Specifically, firmware is patched with the ability to access new commands via SS
 ## Legal
 There is risk for potential damage to your system when utilizing this code. If an error occurs during flashing, or you end up flashing corrupted firmware, the iLO will not be able to recover itself. The iLO's flash chip cannot be programmed on-board, and must be fully desoldered and reprogrammed to recover the functionality. Additionally, utilizing the included new features may cause your server to overheat or otherwise suffer damage. Do not proceed with installing this firmware if you don't know what you're doing. **You have been warned**. There is no warranty for this code nor will I be responsible for any damage you cause. I have personally only tested this firmware on my DL380p Gen8, and DL380e Gen8.
 
-This repo does not contain any iLO 4 binaries; unmodified or patched as they are owned by HP. For security purposes, I encourage you to follow the steps listed to build the patched version of the iLO yourself, while verifying the contents of the patched code.
+This repo does not contain any iLO 4 binaries; unmodified or patched as they are owned by HP. Websites have, in the past, been served with cease and desist orders from HP for hosting iLO binaries. For security purposes, I encourage you to follow the steps listed to build the patched version of the iLO yourself, while verifying the contents of the patched code.
 
 ## Getting Started
 
@@ -19,7 +19,7 @@ This repo does not contain any iLO 4 binaries; unmodified or patched as they are
 - And to [/u/phoenixdev](https://www.reddit.com/user/phoenixdev), whose original work on iLO4 v2.60 and v2.73 allowed for fans to be controlled in the first place.
 This repository utilizes modified code from the iLO4 Toolbox. The toolkit invokes code directly from the iLO4 Toolbox, as well as includes modified versions of Airbus Security Lab's original patching code to perform the necessary patches. It also utilizes code originally written by [/u/phoenixdev](https://www.reddit.com/user/phoenixdev) that was reverse-engineered from their patched v2.73 iLO4 firmware.
 
-The full documentation on how this code base was derived is fully detailed [in the research/ folder](https://github.com/kendallgoto/ilo4_unlock/tree/master/research).
+The full documentation on how this code base was derived is fully detailed [in the research/ folder](research/readme.md).
 
 ## Relevant Reading & Prior Work
 [2019-10-02 /u/phoenixdev's preliminary writeup](https://www.reddit.com/r/homelab/comments/dc7dbc/silence_of_the_fans_preliminary_success_with/)  
