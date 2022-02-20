@@ -2,7 +2,7 @@
 To the best of my ability, I've documented the patched bytes included in the patch_userland.json file below.
 
 ## Bypass signature check : BEQ XX -> B XX
-By patching the signature check in the userland, we're able to upload arbitrary firmware. This is a very similar change to the one we make in the kernel, except this validates the firmware after web upload, where the kernel change validates the firmware at boot. I'm not sure what the purpose of this code is - maybe to make it easier for /u/phoenixdev to work on changes? But the signature bypass didn't work in practice for me & I don't see this bypass in Airbus' research ... I might remove it for v2.79.
+By patching the signature check in the userland, we're able to upload arbitrary firmware. This is a very similar change to the one we make in the kernel, except this validates the firmware after web upload, where the kernel change validates the firmware at boot. I'm not sure what the purpose of this code is - maybe to make it easier for /u/phoenixdev to work on changes? But the signature bypass didn't work in practice for me & I don't see this bypass in Airbus' research ... I might remove it in the future.
 
 ## Rename `quit` to `OCBB`
 In our table of commands, we must remove some known commands to make room for our new commands. Since `quit` is the same as `exit`, we can replace it with OCBB.
@@ -35,10 +35,10 @@ entrypoint
 0D C0 A0 E1                       MOV             R12, SP				-- Initialize function
 00 D8 2D E9                       PUSH            {R11,R12,LR,PC}		-- init
 04 B0 4C E2                       SUB             R11, R12, #4			-- init
-0A DC 4D E2                       SUB             SP, SP, #0xA00		-- allocate some space on the stack
-00 00 8D E5                       STR             R0, [SP]				-- store R0 on SP (5/6/7/8)
+0A DC 4D E2                       SUB             SP, SP, #0xA00		-- allocate some space on the stack for a IPC struct
+00 00 8D E5                       STR             R0, [SP]				-- store R0 on SP (5/6/7/8), first value in struct
 00 30 A0 E3                       MOV             R3, #0				-- start R3 @ 0
-04 20 8D E2                       ADD             R2, SP, #4			-- prepare R2 for writing onto stack @ SP+4
+04 20 8D E2                       ADD             R2, SP, #4			-- prepare R2 to write at 0x4 in struct for arg output
 01 0A 87 E2                       ADD             R0, R7, #0x1000		-- R0 = R7+0x1000; R0 points at input args?
 parseloop																-- start character process loop
 01 10 D0 E4                       LDRB            R1, [R0],#1			-- load 1 byte from R0 into R1, incr R0+1
@@ -50,8 +50,8 @@ F9 FF FF 1A                       BNE             parseloop				-- if not, loop a
 00 30 C2 E5                       STRB            R3, [R2]				-- add final \0
 0D 00 A0 E1                       MOV             R0, SP				-- call(SP, SP+500)
 05 1C 8D E2                       ADD             R1, SP, #0x500		-- call(SP, SP+500)
-EE F8 00 EB                       BL              sub_21B157C			-- call appropriate `health` service method
-00 05 9D E5                       LDR             R0, [SP,#0x500]		-- load R0 from [SP+500]?
+EE F8 00 EB                       BL              sub_21B157C			-- launch IPC call, passing the struct + a return pointer
+00 05 9D E5                       LDR             R0, [SP,#0x500]		-- Load yielded value from return pointer & pass it back out on R0
 00 A8 1B E9                       LDMDB           R11, {R11,SP,PC}		-- end function
 
 00 00 00 00 00 00+                ALIGN 0x10							-- pad unused bytes w/ 0s
@@ -64,7 +64,8 @@ sub_21B157C fires a call to our health service -- which will in turn call the de
 Bypass default stdout behavior of `health` app and call E76184 instead.
 
 ## 0xE76184 Logging Patch
-More documentation is needed for this! I don't really understand what the code does - although, its purpose is to redirect logging behavior from the health service back to stdout for the user.
+The original piece of code here looks to be dead, so we replace it with our custom logging code that is entered from sub_E75D98. The previous function seems to serve as the general handler for all output from the health service; so we subvert all the output back into here instead.
+I haven't fully dissected this code; but at a cursory look, it seems to be mimicing a VSPChannel IPC call, which ends up reflecting the data back to stdout. There's some similar code used in other functions, so it largely seems to mimic those calls + do some string parsing to get the proper output at the beginning. Hopefully I can dissect this further later.
 
 ## Add entry jump to OCBB
 There's also a separate array of shell command structs. Each element contains a pointer to the name, function, help function, and version function of a shell command. We move the second value, the function pointer, to point to the entrypoint marked previously.
