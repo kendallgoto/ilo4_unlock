@@ -3,6 +3,8 @@ A toolkit for patching HPE's iLO 4 firmware with access to previously inaccessib
 
 Specifically, firmware is patched with the ability to access new commands via SSH, relating to system health (`h`), fan tuning (`fan`), on-board temperature sensors (`ocsd`), and option chip health systems (`ocbb`). Designed for [/r/homelab](https://reddit.com/r/homelab) users, this modified firmware provides administrators with the ability to adjust HP's aggressive fan curves on iLO4-equipped servers (such as DL380p / DL380p Gen 8 & Gen 9). Another common use case is to prevent server fans from maxing out when a non-HPE certified PCI-e card is used in a system.
 
+**Please note: At this time, v2.77 is the most recent iLO that has a working patch. After this version, HP has removed many of the control utilities that make patching v2.78 and v2.79 useful. While this may change in the future, bringing useful tools to v2.79 (the current latest) will take an extremely large amount of work. The patching works fine here, it just does not provide access to useful functions**
+
 ## Legal
 There is risk for potential damage to your system when utilizing this code. If an error occurs during flashing, or you end up flashing corrupted firmware, the iLO will not be able to recover itself. The iLO's flash chip cannot be programmed on-board, and must be fully desoldered and reprogrammed to recover the functionality. Additionally, utilizing the included new features may cause your server to overheat or otherwise suffer damage. Do not proceed with installing this firmware if you don't know what you're doing. **You have been warned**. There is no warranty for this code nor will I be responsible for any damage you cause. I have personally only tested this firmware on my DL380p Gen8, and DL380e Gen8.
 
@@ -58,6 +60,88 @@ sudo shutdown now # disable the security override after shutting down!
 
 ## Use
 Some documented features coming soon -- however, the relevant reading below has a lot of great community insights.
+
+```
+FAN:
+Usage:
+
+  info [t|h|a|g|p]
+                - display information about the fan controller
+                  or individual information.
+  g             - configure the 'global' section of the fan controller
+  g smsc|start|stop|status
+          start - start the iLO fan controller
+          stop - stop the iLO fan controller
+          smsc - configure the SMSC for manual control
+       ro|rw|nc - set the RO, RW, NC (no_commit) options
+    (blank)     - shows current status
+  t             - configure the 'temperature' section of the fan controller
+  t N on|off|adj|hyst|caut|crit|access|opts|set|unset
+             on - enable temperature sensor
+            off - disable temperature sensor
+            adj - set ADJUSTMENT/OFFSET
+      set/unset - set or clear a fixed simulated temp (also 'fan t set/unset' for show/clear all)
+           hyst - set hysteresis for sensor
+           caut - set CAUTION threshold
+           crit - set CRITICAL threshold
+         access - set ACCESS method for sensor (should be followed by 5 BYTES)
+           opts - set the OPTION field
+  h             - configure the 'tacHometers' section of the fan controller
+  h N on|off|min|hyst|access
+             on - enable sensor N
+            off - disable sensor N
+            min - set MINIMUM tach threshold
+           hyst - set hysteresis
+ grp ocsd|show  - show grouping parameters with OCSD impacts
+  p             - configure the PWM configuration
+  p N on|off|min|max|hyst|blow|pctramp|zero|feton|bon|boff|status|lock X|unlock|tickler|fix|fet|access
+             on - enable (toggle) specified PWM
+            off - disable (toggle) specified PWM
+            min - set MINIMUM speed
+            max - set MAXIMUM speed
+           blow - set BLOWOUT speed
+            pct - set the PERCETNAGE blowout bits
+           ramp - set the RAMP register
+           zero - set the force ZEROP bit on/off
+          feton - set the FET 'for off' bit on/off
+            bon - set BLOWOUT on
+           boff - set BLOWOUT off
+         status - set STATUS register
+           lock - set LOCK speed and set LOCK bit
+         unlock - clear the LOCK bit
+        tickler - set TICKLER bit on/off - tickles fans even if FAN is stopped
+  pid           - configure the PID algorithm
+  pid N p|i|d|sp|imin|imax|lo|hi  - configure PID paramaters
+                                  - * Use correct FORMAT for numbers!
+             p - set the PROPORTIONAL gain
+             i - set the INTEGRAL gain
+             d - set the DERIVATIVE gain
+            sp - set SETPOINT
+          imin - set I windup MIN value
+          imax - set I windup MAX value
+            lo - set output LOW limit
+            hi - set output HIGH lmit
+ MISC
+  rate X        - Change rate to X ms polling (default 3000)
+  ramp          - Force a RAMP condition
+  dump          - Dump all the fan registers in raw HEX format
+  hyst h v1..vN - Perform a test hysteresis with supplied numbers
+  desc <0>..<15> - try to decode then execute raw descriptor bytes (5 or 16)
+  actn <0>..<15> - try to decode then execute raw action bytes (5 or 16)
+  debug trace|t X|h X|a X|g X|p X|off|on
+                - Set the fine control values for the fan FYI level
+  DIMM          - DIMM-specific subcommand handler
+  DRIVE         - Drive temperature subcommand handler
+  MB            - Memory buffer subcommand handler
+  PECI          - PECI subcommand handler
+ AWAITING DOCUMENTAION
+  ms  - multi-segment info
+  a N  - algorithms - set parameters for multi-segment.
+  w   - weighting
+```
+See the [scripts/](scripts/readme.md) folder as well.
+## Getting Involved
+Want to get involved? Check out [here](CONTRIBUTING.md)!
 
 ## Credits
 - Thanks to the work of [Airbus Security Lab](https://github.com/airbus-seclab/ilo4_toolbox); whose previous work exploring iLO 4 & 5 was instrumental in allowing the development of modified iLO firmware.

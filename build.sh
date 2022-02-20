@@ -74,6 +74,9 @@ case $1 in
 	"250" | "273" | "277")
 		run_patch $1
 ;;
+    "latest")
+        run_patch "277"
+;;
 	*)
 		echo "usage: $0 <init|250|273|277>"
 	    exit 1
