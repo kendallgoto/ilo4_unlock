@@ -29,8 +29,8 @@ source venv/bin/activate
 ## Building Firmware
 ``` bash
 ./build.sh init # download necessary HPE binaries
-#./build.sh 250/273/279 -- see patches/ folder for more info on each patch!
-./build.sh 279  # generate iLO v2.79 patched firmware
+#./build.sh 250/273/278 -- see patches/ folder for more info on each patch!
+./build.sh 278  # generate iLO v2.78 patched firmware
 # The build setup creates a build/ folder where all the artifacts are stored. The final firmware location will be printed at the end of the script, if no errors are produced first.
 ```
 ## Flashing Firmware
@@ -48,7 +48,7 @@ Following the Getting Started steps, here's what I did after building:
 sudo mobprobe -r hpilo
 mkdir -p flash
 cp binaries/flash_ilo4 binaries/CP027911.xml flash/
-cp build/ilo4_279.bin.patched flash/ilo4_250.bin
+cp build/ilo4_278.bin.patched flash/ilo4_250.bin
 cd flash
 sudo ./flash_ilo4 --direct
 # wait until the fans spin down ...
