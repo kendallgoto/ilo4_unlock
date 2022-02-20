@@ -1,0 +1,9 @@
+[
+	{
+		"remark": 		"Patch signature check : BNE XX -> MOV R0, #0",
+		"offset":		"0x38BC",
+		"size":			4,
+		"prev_data":	"4000001A",
+		"patch":		"0000A0E1"
+	}
+]
