@@ -19,7 +19,7 @@
 # I had to do to patch my server from a Ubuntu 21.10 Live CD on 2/20/2022.
 # On a server, you can run this with
 # wget https://raw.githubusercontent.com/kendallgoto/ilo4_unlock/main/automatic.sh && chmod +x automatic.sh && ./automatic.sh
-
+set -e
 sudo apt-add-repository -y universe
 sudo apt update
 sudo apt-get install -y python2-minimal git curl
@@ -33,10 +33,12 @@ source venv/bin/activate
 ./build.sh init
 ./build.sh latest
 
-sudo mobprobe -r hpilo
+sudo modprobe -r hpilo
 mkdir -p flash
 cp binaries/flash_ilo4 binaries/CP027911.xml flash/
 cp build/ilo4_*.bin.patched flash/ilo4_250.bin
-cd flash
 
-echo "Ready to flash! Run sudo ./flash_ilo4 --direct"
+cd flash
+cwd=$(pwd)
+
+echo "Ready to flash! Run sudo ./flash_ilo4 --direct inside $CWD"
