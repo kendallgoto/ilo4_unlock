@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 if [ $# -ne 1 ]; then
-    echo "usage: $0 <init|250|273|278>"
+    echo "usage: $0 <init|250|273|277>"
     exit 1
 fi
 set -e
@@ -71,10 +71,10 @@ case $1 in
 	init)
 		do_init
 ;;
-	"250" | "273" | "278")
+	"250" | "273" | "277")
 		run_patch $1
 ;;
 	*)
-		echo "usage: $0 <init|250|273|278>"
+		echo "usage: $0 <init|250|273|277>"
 	    exit 1
 esac
