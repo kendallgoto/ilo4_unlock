@@ -59,8 +59,6 @@ sudo shutdown now # disable the security override after shutting down!
 
 
 ## Use
-Some documented features coming soon -- however, the relevant reading below has a lot of great community insights.
-
 ```
 FAN:
 Usage:
@@ -139,7 +137,9 @@ Usage:
   a N  - algorithms - set parameters for multi-segment.
   w   - weighting
 ```
-See the [scripts/](scripts/readme.md) folder as well.
+See the [scripts/](scripts/) folder as well.
+For info about the lesser used functions, please refer to the relevant reading. I don't use them, so I haven't documented them.
+
 ## Getting Involved
 Want to get involved? Check out [here](CONTRIBUTING.md)!
 
