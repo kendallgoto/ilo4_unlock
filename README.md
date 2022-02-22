@@ -56,7 +56,8 @@ sudo ./flash_ilo4 --direct
 # wait until the fans spin down ...
 sudo shutdown now # disable the security override after shutting down!
 ```
-
+Remove power from the server, re-enable iLO security, and plug the server back in.
+Power must be removed from the server so that the firmware can be loaded. Otherwise you will see the firmware running, but fan commands will not work.
 
 ## Use
 ```
