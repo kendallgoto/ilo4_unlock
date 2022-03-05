@@ -19,11 +19,12 @@ loop:
 	ADD		R2, SP, #4					; actual sprintf value @ SP+4
 	.word	0xEBFFD771					; BL 0x00012F68 print to shell (printf-y)
 	SUB		R0, R6, R7
-	NOP									;CMP		R0, #0x1000	 if we've printed 0x1000 bytes
-	B		loop						; if less than 0x1000, keep going!
+	LDR		R1, endPtr					; grab ending size
+	CMP		R0, R1						; if we've printed more than ending size bytes
+	BLT		loop						; if less than end size, keep going!
 end:
 	MOV		R0, #0x20
-	.word	0xEB00BC93					; BL 0x0004C404 report status maybe call(0x20)
+	.word	0xEB00BC92					; BL 0x0004C404 report status maybe call(0x20)
 	LDMDB	R11, {R5, R6, R7, R11, SP, PC}	; epilogue
 
 printedString:
@@ -31,6 +32,8 @@ printedString:
 
 stringForm:
 	.string "%s"
-	.word	0x0
-	.word	0x0
+
+endPtr:
+	.word	0xFFFFFFFF
+
 	.byte	0x0
