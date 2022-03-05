@@ -14,30 +14,33 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-if [ $# -ne 1 ]; then
-    echo "usage: $0 <init|250|273|277>"
+exit_help() {
+    echo "usage: \"$0 <init/latest/patch-name>\""
+    echo "       \"$0 init\" to download binaries on a new install"
+    echo "       \"$0 latest\" to automatically build the latest target"
+    echo "       \"$0 [patch-name]\" to directly build a patch from patches/"
     exit 1
-fi
-set -e
-
+}
 check_hash() {
 	HASH=`sha1sum "$1" | cut -d' ' -f1`
-	KNOWN_HASH=`cat $2`
-	if [ "$HASH" != "$KNOWN_HASH" ]; then
+	if [ "$HASH" != "$2" ]; then
 		echo "Binary hash mismatch ... please init again."
 		exit 1
 	fi
+    echo "Hash validated for $1"
 }
 run_patch() {
-	echo "Patching with iLO $1"
-	USE_FILE="binaries/ilo4_$1.bin"
-	PATCH_PATH="patches/$1"
-	check_hash "$USE_FILE" "$PATCH_PATH/initial.sha1"
-
-	./$PATCH_PATH/build.sh "$USE_FILE" "build"
-
-	check_hash "build/ilo4_$1.bin.patched" "$PATCH_PATH/checksum.sha1"
-	exit 0
+    PATCH_PATH="patches/$1"
+    if [ -f "$PATCH_PATH/config" ]; then
+        source "$PATCH_PATH/config"
+        BIN_PATH="binaries/$BINARY_NAME"
+        check_hash "$BIN_PATH" "$BINARY_SHA1"
+        ./$PATCH_PATH/build.sh "$BIN_PATH" "build"
+        check_hash "build/$BINARY_NAME.patched" "$RESULT_SHA1"
+        exit 0
+    else
+        exit_help
+    fi
 }
 do_init() {
 	echo "Downloading binaries ..."
@@ -45,39 +48,51 @@ do_init() {
 	mkdir -p binaries/
 	for d in patches/* ; do
 		if [ -d "$d" ]; then
-			SHORT_NAME=`basename $d`
-			BIN_URL=`cat $d/bin-link.url`
-			FILE_NAME="ilo4_$SHORT_NAME.bin"
-			echo "Downloading $BIN_URL as $FILE_NAME"
-			wget -O temp.csexe -q $BIN_URL
-			sh temp.csexe --unpack=archivetemp > /dev/null
-			cp archivetemp/ilo4_*.bin ./binaries/
-			if [ "$SHORT_NAME" = "250" ]; then
-				cp archivetemp/flash_ilo4 archivetemp/CP027911.xml ./binaries/
-			fi
-			rm -rf archivetemp
-			rm temp.csexe
+            if [ -f "$d/config" ]; then
+                source "$d/config"
+                if [ -f "./binaries/$BINARY_NAME" ]; then
+                    echo "Binary $BINARY_NAME already downloaded ..."
+                else
+                    echo "Downloading $BINARY_URL as $BINARY_NAME"
+                    wget -O temp.csexe -q $BINARY_URL
+                    sh temp.csexe --unpack=archivetemp > /dev/null
+                    cp archivetemp/ilo4_*.bin "./binaries/$BINARY_NAME"
+                    if [ "$NAME" = "250" ]; then
+                        cp archivetemp/flash_ilo4 archivetemp/CP027911.xml ./binaries/
+                    fi
+                    rm -rf archivetemp
+                    rm temp.csexe
+                    check_hash "binaries/$BINARY_NAME" "$BINARY_SHA1"
+                fi
+            fi
 		fi
 	done
-	echo "Downloaded binaries to binaries/*.bin"
+	echo "Downloaded binaries to to ./binaries"
 	ls -al binaries
 	exit 0
 }
+get_latest() {
+    latest_patch=`cat ./patches/latest`
+    run_patch $latest_patch
+}
+
+# Runtime
+if [ $# -ne 1 ]; then
+    exit_help
+fi
+set -e
+
 
 cd "${0%/*}" # cd to script location
 
 case $1 in
-
 	init)
 		do_init
 ;;
-	"250" | "273" | "277")
-		run_patch $1
-;;
     "latest")
-        run_patch "277"
+        get_latest
 ;;
 	*)
-		echo "usage: $0 <init|250|273|277>"
-	    exit 1
+		run_patch $1
+;;
 esac
