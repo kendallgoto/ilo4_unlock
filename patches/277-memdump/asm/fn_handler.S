@@ -34,6 +34,6 @@ stringForm:
 	.string "%s"
 
 endPtr:
-	.word	0xFFFFFFFF
+	.word	0x0000FFFF
 
 	.byte	0x0
