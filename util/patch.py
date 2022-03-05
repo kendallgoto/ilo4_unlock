@@ -38,8 +38,9 @@ def read_patch(file):
         try:
             output = ks.asm(handler)
         except KsError as e:
-            print "Error with Keystone"
-            print e.message, e.get_asm_count()
+            print "Error with Keystone ", e.message
+            if e.get_asm_count() is not None:
+                print "asmcount = %u" % e.get_asm_count()
             sys.exit(1)
         return ''.join(chr(x) for x in output[0])
 

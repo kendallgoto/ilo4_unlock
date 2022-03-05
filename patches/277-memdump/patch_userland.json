@@ -1,0 +1,30 @@
+[
+	{
+		"remark": 		"Bypass signature check : BEQ XX -> B XX",
+		"offset":		"0x96EDE8",
+		"size":			4,
+		"prev_data":	"1D 00 00 0A",
+		"patch":		"1D 00 00 EA"
+	},
+	{
+		"remark": 		"Rename `VSPR` to `DUMP`",
+		"offset":		"0xB8045C",
+		"size":			5,
+		"prev_data":	"56 53 50 5C 52",
+		"patch":		"68 85 4D 80 00"
+	},
+	{
+		"remark": 		"Add function handler for dump",
+		"offset":		"0xAFD768",
+		"size":			116,
+		"prev_data":	"0D C0 A0 E1 20 D8 2D E9 04 B0 4C E2 8B 13 00 EB 9A 1F 8F E2 00 50 A0 E1 FE 96 00 EB 54 12 9F E5 04 00 95 E5 01 00 50 E1 09 00 00 1A 02 00 A0 E3 28 00 85 E5 08 00 A0 E3 60 00 85 E5 00 00 A0 E3 98 00 85 E5 2C 02 9F E5 36 00 00 EB 91 1F 8F E2 05 00 00 EA 04 00 A0 E3 28 00 85 E5 00 00 A0 E3 60 00 85 E5 98 00 85 E5 8B 1F 8F E2 04 00 95 E5 65 D7 FF EB",
+		"file":			"fn_handler.S"
+	},
+	{
+		"remark": 		"Add entry jump to dump",
+		"offset":		"0xB97848",
+		"size":			4,
+		"prev_data":	"7C C8 01 00",
+		"patch":		"5C D1 01 00"
+	}
+]
