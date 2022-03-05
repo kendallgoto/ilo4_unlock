@@ -11,7 +11,7 @@
 		"offset":		"0xB8045C",
 		"size":			5,
 		"prev_data":	"56 53 50 5C 52",
-		"patch":		"68 85 4D 80 00"
+		"patch":		"44 55 4D 50 00"
 	},
 	{
 		"remark": 		"Add function handler for dump",
