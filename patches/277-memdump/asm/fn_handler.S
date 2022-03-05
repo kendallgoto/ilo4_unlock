@@ -6,7 +6,7 @@ dump:
 	.word	0xEB00138A					; BL 0x21F9C grab_context(R0)
 	MOV		R5, R0						; preserve context
 start:
-	MOV		R7, R5						; i = 0 / wherever to start dumping
+	MOV		R7, #0						; i = 0 / wherever to start dumping
 	MOV		R6, R7						; keep a copy of start index
 loop:
 	ADD		R0, SP, #4					; storage spot SP+4
@@ -19,8 +19,8 @@ loop:
 	ADD		R2, SP, #4					; actual sprintf value @ SP+4
 	.word	0xEBFFD771					; BL 0x00012F68 print to shell (printf-y)
 	SUB		R0, R6, R7
-	CMP		R0, #0x1000					; if we've printed 0x1000 bytes
-	BLT		loop						; if less than 0x100, keep going!
+	NOP									;CMP		R0, #0x1000	 if we've printed 0x1000 bytes
+	B		loop						; if less than 0x1000, keep going!
 end:
 	MOV		R0, #0x20
 	.word	0xEB00BC93					; BL 0x0004C404 report status maybe call(0x20)
