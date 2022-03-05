@@ -23,7 +23,7 @@ start:
 	ADD		R2, SP, #4			; Move R2 to write at 0x4 in IPC struct
 	ADD		R0, R7, #0x1000		; Move R0 to start of input arg
 loop:							; Parse string char-by-char
-	LDRB	R1, [R0], #1		; Load char from string
+	LDRB	R1, [R0], #1		; Load char from string; R0++ (0x1000+i)
 	CMP		R1, #0x20			; if loaded == ' '
 	STRBEQ	R3, [R2],#1			;	then store \0 into R2, R2++
 	STRBNE	R1, [R2],#1			;	else store char in R2, r2++
@@ -36,6 +36,5 @@ loop:							; Parse string char-by-char
 	LDR		R0, [SP,#0x500]		; load yielded value to R0
 	LDMDB	R11, {R11,SP,PC}	; exit
 
-pad:
 	.word	0x00000000
 	.word	0x00000000
