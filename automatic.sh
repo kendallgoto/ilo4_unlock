@@ -29,7 +29,7 @@ git clone --recurse-submodules https://github.com/kendallgoto/ilo4_unlock.git
 cd ilo4_unlock
 python2 -m virtualenv venv
 source venv/bin/activate
-
+pip install -r requirements.txt
 ./build.sh init
 ./build.sh latest
 
