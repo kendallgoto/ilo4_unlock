@@ -34,6 +34,7 @@ def read_patch(file):
             this_line = this_line.split(";")[0]
             handler_split[i] = this_line
         handler = "\n".join(handler_split)
+        print handler
         ks = Ks(KS_ARCH_ARM, KS_MODE_ARM)
         try:
             output = ks.asm(handler)

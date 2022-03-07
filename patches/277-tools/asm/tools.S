@@ -25,6 +25,8 @@ _addr_loop:
 	BEQ		cmd_write
 	CMP		R0, #0x78 ; x
 	BEQ		cmd_execute
+	CMP		R0, #0x72 ; r
+	BEQ		cmd_read
 
 	MOV		r3, r8
 	ADD		r2, r5, #0x264
@@ -34,7 +36,7 @@ _addr_loop:
 return:
 	LDMDB	R11, {R5-R11, SP, PC}			; epilogue
 
-cmd_write:
+cmd_write: ; wADDR CONTENT
 	add r1, r5, #0x364
 
 _cmdw_data_loop:
@@ -60,7 +62,25 @@ _cmdw_data_loop:
 	strb r3, [r8], #1
 	b _cmdw_data_loop
 
-cmd_alloc:
+cmd_read:
+	add r1, r5, #0x364 ; r1 is reading size value
+	LDRB r9, [r1], #1
+	mov r2, r8		   ; r2 has start address
+_cmdr_data_loop:
+	LDRB r8, [r2], #1	; grab from r2, incrementing r2, load into r8 for print
+	SUB r9, r9, #1
+	cmp r9, #0
+	blt return
+
+	push {r0, r1, r2, r3}
+	adr r1, _cmdr_addr_fmt
+	mov r3, r8
+	mov r0, r6
+	bl printToShell
+	pop {r0, r1, r2, r3}
+
+	b _cmdr_data_loop
+cmd_alloc: ; aSIZE
 	mov r0, r8
 	bl libc_malloc
 	mov r2, r0
@@ -69,7 +89,7 @@ cmd_alloc:
 	bl printToShell
 	b return
 
-cmd_free:
+cmd_free: ; fADDR
 	mov r2, r8
 	adr r1, _cmdf_fmt
 	mov r0, r6
@@ -78,7 +98,7 @@ cmd_free:
 	bl libc_free
 	b return
 
-cmd_execute:
+cmd_execute: ; xADDR
 	mov r1, r5
 	mov r0, r6
 	blx r8
@@ -121,10 +141,14 @@ _cmdw_addr_fmt:
 	.ascii "%#x <- %#x\r\n\0"
 	.align 2
 
+_cmdr_addr_fmt:
+	.ascii "%#x : %#x\r\n\0"
+	.align 2
+
 _cmda_fmt:
 	.ascii "alloc %#x\r\n\0"
 
-_cmdf_fmt	:
+_cmdf_fmt:
 	.ascii "free %#x\r\n\0"
 
-	.skip 749, 0x0
+	.skip 673, 0x0
