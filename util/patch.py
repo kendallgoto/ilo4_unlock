@@ -21,33 +21,7 @@ import json
 import imp
 import os
 from keystone import *
-def read_patch(file):
-    dir = os.path.dirname(sys.argv[2])
-    patch = os.path.join(dir, "asm", file)
-
-    with open(patch, "rb") as f:
-        handler = f.read()
-        # remove comments ...
-        handler_split = handler.split('\n')
-        for i in range(len(handler_split)):
-            this_line = handler_split[i]
-            this_line = this_line.split(";")[0]
-            handler_split[i] = this_line
-        handler = "\n".join(handler_split)
-        print handler
-        ks = Ks(KS_ARCH_ARM, KS_MODE_ARM)
-        try:
-            output = ks.asm(handler)
-        except KsError as e:
-            print "Error with Keystone ", e.message
-            if e.get_asm_count() is not None:
-                print "asmcount = %u" % e.get_asm_count()
-            sys.exit(1)
-        return ''.join(chr(x) for x in output[0])
-
-
-dirname = os.path.dirname(__file__)
-ilo4 = imp.load_source('ilo4', os.path.join(dirname, '../ilo4_toolbox/scripts/iLO4/ilo4lib.py'))
+from common import *
 
 if len(sys.argv) < 4:
     print "usage: %s <input-file.bin> <patch-file.json> <result-file.bin.patched>" % sys.argv[0]
@@ -73,11 +47,14 @@ for patch in patches:
         else:
             prev_data = ("".join(patch["prev_data"].split())).decode("hex")
         if check_data != prev_data:
-            print ilo4.hexdump(prev_data)
-            print ilo4.hexdump(check_data)
+            print hexdump(prev_data)
+            print hexdump(check_data)
             print "[-] Error, bad file content at offset %x" % offs
             sys.exit(1)
     if "file" in patch:
+        dir = os.path.dirname(sys.argv[2])
+        patch["file"] = os.path.join(dir, "asm", patch["file"])
+
         patch["patch"] = read_patch(patch["file"])
         patch["noDecode"] = True
     if "noDecode" in patch:
@@ -85,8 +62,8 @@ for patch in patches:
     else:
         patch_data = ("".join(patch["patch"].split())).decode("hex")
     realsize = sys.getsizeof(patch_data) - sys.getsizeof('')
-    print ilo4.hexdump(check_data)
-    print ilo4.hexdump(patch_data)
+    print hexdump(check_data)
+    print hexdump(patch_data)
     if realsize != size:
         print "Patch length (%d) does not match replaced size (%d)" % (realsize, size)
         sys.exit(1)

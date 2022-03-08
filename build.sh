@@ -53,7 +53,7 @@ build_process() {
     python "$SCRIPT_DIR/ilo4_repack.py" "$FIRMWARE" "$BUILD_LOC/firmware.map" "$BUILD_LOC/elf.bin.patched" "$BUILD_LOC/kernel_main.bin.patched" "$BUILD_LOC/bootloader.bin.patched" &> /dev/null
     mv "$FIRMWARE.backdoored.toflash" "$DEST"
 
-    echo "Final firmware at $2/$(basename "$DEST")"
+    echo "Final firmware at $3/$(basename "$DEST")"
 }
 run_patch() {
     PATCH_PATH="patches/$1"

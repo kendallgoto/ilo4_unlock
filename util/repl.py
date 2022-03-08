@@ -16,6 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+"""
+This REPL environment is heavily based on Airbus Security Lab's work.
+It produces an SSH-based REPL that allows us to (r)ead/(a)lloc/(w)rite/(f)ree/e(x)ecute
+arbitrary code on a running device, patched with our tools. Install 277-tools before using this
+REPL!
+
+Notably, we can create new shell commands on-the-fly by performing `wf [source.S]`, which
+assembles, allocates and writes custom code to memory.
+
+Use at your own risk.
+"""
 import keystone
 import paramiko
 import argparse
@@ -25,28 +36,12 @@ import time
 import struct
 import os
 from keystone import *
+from common import *
 
-triggerCommand = b'help'
-
-parser = argparse.ArgumentParser(description="SSH Tools for iLO4_unlock")
-parser.add_argument('addr', help="IP of iLO")
-parser.add_argument('-u', '--user', type=str, default='Administrator', help="iLO Username")
-parser.add_argument('-p', '--password', type=str, default='', help="iLO Password")
-parser.add_argument('-P', '--port', type=int, default=22, help="SSH Port")
-
-args = parser.parse_args()
-
+"""CONFIG"""
 logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger('ssh')
-logger.info("Connecting ...")
-client = paramiko.client.SSHClient()
-client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
-client.connect(args.addr, args.port, username=args.user, password=args.password, timeout=30, allow_agent=False, look_for_keys=False)
-
-logger.info("SSH session to %s:%d opened", args.addr, args.port)
-
-channel = client.invoke_shell()
-channel.setblocking(0)
+triggerCommand = b'help'
+"""END CONFIG"""
 def recv_all():
     time.sleep(.05)
     result = b''
@@ -70,7 +65,6 @@ def recv_force():
             sys.exit(1)
         data = recv_all()
     return data
-
 def recv_until_prompt():
     data = recv_force()
     while b'hpiLO' not in data:
@@ -88,20 +82,6 @@ def run_command(cmd):
     idx = result.index(needle)
     return result[idx+len(needle):].split(b'\n', 4)[-1]
 
-recv_until_prompt()
-run_command('show')
-
-logger.info("ready")
-def hexdump(src, length=16):
-    FILTER = ''.join([(len(repr(chr(x))) == 3) and chr(x) or '.' for x in range(256)])
-    lines = []
-    for c in xrange(0, len(src), length):
-        chars = src[c:c+length]
-        hex = ' '.join(["%02x" % ord(x) for x in chars])
-        printable = ''.join(["%s" % ((ord(x) <= 127 and FILTER[ord(x)]) or '.') for x in chars])
-        lines.append("%04x  %-*s  %s\n" % (c, length*3, hex, printable))
-    return ''.join(lines)
-
 A16_ENCODING = [c.encode('ascii') for c in 'ABCDEFGHIJKLMNOP']
 def a16_u8_encode(val):
     """Encode a u8 in alpha-16 encoding"""
@@ -112,7 +92,6 @@ def a16_data_encode(data):
 def a16_u32_encode(val):
     """Encode a u32 in alpha-16 encoding (in Big Endian)"""
     return a16_data_encode(struct.pack('>I', val))
-
 def send_custom(op, arg1, *args):
     arg1 = a16_u32_encode(arg1)
     cmd = triggerCommand + b' ' + op.encode('ascii') + arg1
@@ -126,7 +105,6 @@ def send_custom(op, arg1, *args):
     output = output_prefix + output[cmdindex + len(cmd):].lstrip(b'\r\n')
     output = output[:output.rindex(b'hpiLO')].rsplit(b'\n', 1)[0]
     return output.strip(b'\r\n')
-
 def exec_read(cmd):
     if len(cmd) < 3:
         print "r [address] [len]"
@@ -185,39 +163,51 @@ def exec_free(cmd):
     # f [address]
     addr = int(cmd[1], 0)
     print send_custom('f', addr)
-def read_patch(file):
-    dir = os.path.dirname(sys.argv[2])
-    patch = os.path.join(dir, "asm", file)
 
-    with open(patch, "rb") as f:
-        handler = f.read()
-        # remove comments ...
-        handler_split = handler.split('\n')
-        for i in range(len(handler_split)):
-            this_line = handler_split[i]
-            this_line = this_line.split(";")[0]
-            handler_split[i] = this_line
-        handler = "\n".join(handler_split)
-        print handler
-        ks = Ks(KS_ARCH_ARM, KS_MODE_ARM)
-        try:
-            output = ks.asm(handler)
-        except KsError as e:
-            print "Error with Keystone ", e.message
-            if e.get_asm_count() is not None:
-                print "asmcount = %u" % e.get_asm_count()
-            sys.exit(1)
-        return ''.join(chr(x) for x in output[0])
 def exec_write_file(cmd):
     # wf [file]
     if len(cmd) < 2:
         print "wf [file]"
         return
-    patch = read_patch(cmd[1])
+    try:
+        patch = read_patch(cmd[1])
+    except:
+        logger.error("failed to assemble patch")
+        return
     addr = exec_alloc(['a', str(len(patch)+16)])
     print "allocated 0x%x bytes at 0x%x" % (len(patch)+16, addr)
     exec_write(['w', "0x%x" % addr, patch])
     print "wrote to 0x%x, execute with x 0x%x" % (addr, addr)
+
+def exec_write_bin(cmd):
+    # wb [file]
+    if len(cmd) < 2:
+        print "wb [file]"
+        return
+
+parser = argparse.ArgumentParser(description="SSH Tools for iLO4_unlock")
+parser.add_argument('addr', help="IP of iLO")
+parser.add_argument('-u', '--user', type=str, default='Administrator', help="iLO Username")
+parser.add_argument('-p', '--password', type=str, default='', help="iLO Password")
+parser.add_argument('-P', '--port', type=int, default=22, help="SSH Port")
+
+args = parser.parse_args()
+
+logger = logging.getLogger('ssh')
+logger.info("Connecting ...")
+client = paramiko.client.SSHClient()
+client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
+client.connect(args.addr, args.port, username=args.user, password=args.password, timeout=30, allow_agent=False, look_for_keys=False)
+
+logger.info("SSH session to %s:%d opened", args.addr, args.port)
+
+channel = client.invoke_shell()
+channel.setblocking(0)
+
+recv_until_prompt()
+run_command('show')
+logger.info("ready")
+
 while True:
     cmd = raw_input("> ")
     cmd = cmd.split(' ')
@@ -233,10 +223,12 @@ while True:
         exec_free(cmd)
     elif cmd[0] == 'wf':
         exec_write_file(cmd)
+    elif cmd[0] == 'wb':
+        exec_write_bin(cmd)
     elif cmd[0] =='exit':
         break
     else:
-        print("????")
+        print("r/w/x/a/f/wf")
 
 if client:
     client.close()

@@ -32,9 +32,9 @@ pip install -r requirements.txt
 ## Building Firmware
 ``` bash
 ./build.sh init # download necessary HPE binaries
-#./build.sh 250/273/277 -- see patches/ folder for more info on each patch!
+#./build.sh [patch-name] -- see patches/ folder for more info on each patch!
 ./build.sh 277  # generate iLO v2.77 patched firmware
-# The build setup creates a build/ folder where all the artifacts are stored. The final firmware location will be printed at the end of the script, if no errors are produced first.
+# The build setup creates a build/ folder where all the artifacts are stored. The final firmware location will be printed at the end of the script, if no errors are produced.
 ```
 ## Flashing Firmware
 The resulting firmware is located in the `build` directory, under the firmware's name (e.g. `build/ilo4_273.bin.patched` for v2.73 builds). I suggest the following steps to flash the firmware, as you cannot do it from the web interface:
