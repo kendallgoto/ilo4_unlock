@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# This file is part of the ilo4_unlock (https://github.com/kendallgoto/ilo4_unlock/).
+# This file is part of ilo4_unlock (https://github.com/kendallgoto/ilo4_unlock/).
 # Copyright (c) 2022 Kendall Goto.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -29,13 +29,40 @@ check_hash() {
 	fi
     echo "Hash validated for $1"
 }
+build_process() {
+    ROOT_DIR=`git rev-parse --show-toplevel`
+    SCRIPT_DIR="$ROOT_DIR/ilo4_toolbox/scripts/iLO4"
+    UTIL_DIR="$ROOT_DIR/util"
+    BUILD_LOC=$(realpath "$3")
+    DIR=`dirname $1`
+    FIRMWARE="$2"
+    DEST="$BUILD_LOC/$(basename "$FIRMWARE").patched"
+
+    rm -rf "$BUILD_LOC"
+
+    echo "Extracting with iLO4 Toolbox ..."
+    python "$SCRIPT_DIR/ilo4_extract.py" "$FIRMWARE" "$BUILD_LOC" &> /dev/null
+    echo "Patching bootloader ..."
+    python "$UTIL_DIR/patch.py" "$BUILD_LOC/bootloader.bin" "$DIR/patch_bootloader.json" "$BUILD_LOC/bootloader.bin.patched"
+    echo "Patching kernel ..."
+    python "$UTIL_DIR/patch.py" "$BUILD_LOC/kernel_main.bin" "$DIR/patch_kernel.json" "$BUILD_LOC/kernel_main.bin.patched"
+    echo "Patching userland ..."
+    python "$UTIL_DIR/patch.py" "$BUILD_LOC/elf.bin" "$DIR/patch_userland.json" "$BUILD_LOC/elf.bin.patched"
+
+    echo "Repacking with iLO4 Toolbox ..."
+    python "$SCRIPT_DIR/ilo4_repack.py" "$FIRMWARE" "$BUILD_LOC/firmware.map" "$BUILD_LOC/elf.bin.patched" "$BUILD_LOC/kernel_main.bin.patched" "$BUILD_LOC/bootloader.bin.patched" &> /dev/null
+    mv "$FIRMWARE.backdoored.toflash" "$DEST"
+
+    echo "Final firmware at $2/$(basename "$DEST")"
+}
 run_patch() {
     PATCH_PATH="patches/$1"
     if [ -f "$PATCH_PATH/config" ]; then
         source "$PATCH_PATH/config"
         BIN_PATH="binaries/$BINARY_NAME"
         check_hash "$BIN_PATH" "$BINARY_SHA1"
-        ./$PATCH_PATH/build.sh "$BIN_PATH" "build"
+        build_process "$PATCH_PATH/config" "$BIN_PATH" "build"
+        #./$PATCH_PATH/build.sh "$BIN_PATH" "build"
         check_hash "build/$BINARY_NAME.patched" "$RESULT_SHA1"
         exit 0
     else
