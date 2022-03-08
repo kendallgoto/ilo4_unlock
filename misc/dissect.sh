@@ -17,7 +17,7 @@
 set -e
 
 cd "${0%/*}" # cd to script location
-
+cd ../
 cp build/elf.bin.patched ilo4_toolbox/scripts/iLO4/elf.bin
 cd ilo4_toolbox/scripts/iLO4/
 rm -rf mods loaders scripts

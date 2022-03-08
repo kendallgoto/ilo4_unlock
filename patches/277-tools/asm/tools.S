@@ -10,11 +10,11 @@ _start:
 	ADD		r1, r5, #0x264
 _addr_loop:
 	LDRB	R2, [R1, #1]!
-	SUB		R2, R2, #0x41
-	CMP		R2, #0x10
-	LSLLO	R8, R8, #4
-	ADDLO	R8, R8, R2
-	BLO		_addr_loop
+	SUB		R2, R2, #0x41	; r2 = r2 - A
+	CMP		R2, #0x10		; r2 - 0x10
+	LSLLO	R8, R8, #4		; left shift #4 if below 0
+	ADDLO	R8, R8, R2		; r8 = r8 + r2 if below 0
+	BLO		_addr_loop		; loop again if below 0
 
 	LDRB	R0, [R5, #0x264]
 	CMP		R0, #0x61 ; a
