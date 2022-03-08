@@ -6,6 +6,8 @@ This is the only patch I had to change. It makes some calls to relative librarie
 
 Otherwise, I moved around offsets. Here's some Array of Bytes / AoBs I used to track down the pointers:
 
+Check out my documented asm in asm/stdout.S
+
 ## Bypass signature check : BEQ XX -> B XX
 AOB 02 80 83 E0 87 1E 00 EB 00 20 B0 E1 1D 00 00 0A
 one match
@@ -19,6 +21,8 @@ one match
 ## Function entrypoint
 AOB 0D C0 A0 E1 20 D8 2D E9 04 B0 4C E2 8B 13 00 EB 9A
 one match
+
+Check out my documented asm in asm/fn_handler.S
 
 ## Health Break
 AOB 0D C0 A0 E1 0E 00 2D E9 00 D8 2D E9 10 B0 4C E2  08 D0 4D E2

@@ -4,5 +4,7 @@ If you'd like to chat about my research, need help getting something setup, etc.
 
 For the sake of maintaining a dependable `main` and due to the vulnerability of generating iLO patches, please fully document any patches in PRs so that I can adaquetly vet & test them. Submitted code should never include HP intellectual property -- i.e., no binaries!
 
+Please submit PRs against the `dev` branch.
+
 Kendall Goto (k@kgo.to)
 /u/iamkgoto

@@ -1,0 +1,9 @@
+[
+	{
+		"remark": 		"Patch signature check : BEQ XX -> B XX",
+		"offset":		"0x1FBB0",
+		"size":			4,
+		"prev_data":	"0400000A",
+		"patch":		"040000EA"
+	}
+]
