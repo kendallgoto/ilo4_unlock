@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# This file is part of the ilo4_unlock (https://github.com/kendallgoto/ilo4_unlock/).
+# This file is part of ilo4_unlock (https://github.com/kendallgoto/ilo4_unlock/).
 # Copyright (c) 2022 Kendall Goto.
 #
 # This program is free software: you can redistribute it and/or modify

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# This file is part of the ilo4_unlock (https://github.com/kendallgoto/ilo4_unlock/).
+# This file is part of ilo4_unlock (https://github.com/kendallgoto/ilo4_unlock/).
 # Copyright (c) 2022 Kendall Goto
 # with some code derived from https://github.com/airbus-seclab/ilo4_toolbox
 #

@@ -39,12 +39,12 @@ pip install -r requirements.txt
 ## Flashing Firmware
 The resulting firmware is located in the `build` directory, under the firmware's name (e.g. `build/ilo4_273.bin.patched` for v2.73 builds). I suggest the following steps to flash the firmware, as you cannot do it from the web interface:
 1. Copy the resulting firmware to a USB key, along with the flasher files (`binaries/flash_ilo4` & `binaries/CP027911.xml`)
-2. Enable iLO4 Security Override (for me, this was flipping the first DIP switch on the board).
+2. Remove power from your server, and enable iLO4 Security Override (for me, this was flipping the first DIP switch on the board).
 3. Boot your server from a baremetal Linux install -- a Ubuntu LiveCD works well.
 4. Ensure any HP modules are unloaded (`sudo modprobe -r hpilo`)
 5. Plug in the USB key, rename the firmware to `ilo4_250.bin`, then run `sudo ./flasher --direct` to patch your server.
 6. Resist the urge to unplug the system and break everything while flashing. **It will be loud**. It took 2 minutes to erase, and 1 minute to flash.
-7. After patching, shut down and disable the iLO4 security override.
+7. After patching, shut down and remove power from the server to disable the iLO4 security override.
 
 Following the Getting Started steps, here's what I did after building:
 ```bash
@@ -55,10 +55,8 @@ cp build/ilo4_277.bin.patched flash/ilo4_250.bin
 cd flash
 sudo ./flash_ilo4 --direct
 # wait until the fans spin down ...
-sudo shutdown now # disable the security override after shutting down!
+sudo shutdown now # remove power and disable the security override after shutting down!
 ```
-Remove power from the server, re-enable iLO security, and plug the server back in.
-Power must be removed from the server so that the firmware can be loaded. Otherwise you will see the firmware running, but fan commands will not work.
 
 ## Use
 ```
