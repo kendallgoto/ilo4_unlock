@@ -58,11 +58,9 @@ def recv_force():
         logger.debug("Waiting ...")
         if numiter <= 10:
                 time.sleep(.1)
-        elif numiter <= 20:
-                time.sleep(1)
         else:
             logger.fatal("Time out")
-            sys.exit(1)
+            return "hpiLO"
         data = recv_all()
     return data
 def recv_until_prompt():
@@ -184,7 +182,25 @@ def exec_write_bin(cmd):
     if len(cmd) < 2:
         print "wb [file]"
         return
+    with open(cmd[1], 'rb') as f:
+        patch = f.read()
 
+    addr = exec_alloc(['a', str(len(patch)+16)])
+    print "allocated 0x%x bytes at 0x%x" % (len(patch)+16, addr)
+    exec_write(['w', "0x%x" % addr, patch])
+    print "wrote to 0x%x, execute with x 0x%x" % (addr, addr)
+def exec_setcmd(cmd):
+    #sc [addr]
+    if len(cmd) < 2:
+        print "sc [addr]"
+        return
+    addr = int(cmd[1], 0)
+    exec_write(['w', "0x000BAB98", struct.pack('<I', addr)])
+    print "wrote null_cmd to 0x%x" % addr
+def exec_plain(cmd):
+    cmd.pop(0)
+    fullcmd = " ".join(cmd)
+    print srp(fullcmd + b'\r')
 parser = argparse.ArgumentParser(description="SSH Tools for iLO4_unlock")
 parser.add_argument('addr', help="IP of iLO")
 parser.add_argument('-u', '--user', type=str, default='Administrator', help="iLO Username")
@@ -225,6 +241,10 @@ while True:
         exec_write_file(cmd)
     elif cmd[0] == 'wb':
         exec_write_bin(cmd)
+    elif cmd[0] == 'sc':
+        exec_setcmd(cmd)
+    elif cmd[0] == 'z':
+        exec_plain(cmd)
     elif cmd[0] =='exit':
         break
     else:
