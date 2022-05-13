@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 #
+# Provided by https://github.com/Aterfax in PR #3
+# Set up using Cron rules (crontab -e)
+# @restart /home/whatever/my-start-script.sh # trigger script at bootup
+# */6 * * * * /usr/bin/screen -S my-screen-name -X stuff 'fan info'`echo -ne '\015'` # send fan info regularly to keep alive
+#
 # This setup is tuned for my DL380p Gen8 LFF server with additional PCIe cards.
 # We establish a screen session, SSH to iLO4 and "stuff" it with commands.
 # This preserves the first TTY in the screen session connected with iLO4
