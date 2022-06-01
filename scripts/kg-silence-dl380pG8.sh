@@ -27,22 +27,23 @@
 # This setup is tuned for my DL380p Gen8 SFF server.
 IP=10.0.99.50
 PASSWD="/root/passwordfile"
+OPT="-oHostKeyAlgorithms=+ssh-dss -oKexAlgorithms=+diffie-hellman-group14-sha1"
 
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan info'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan info'
 
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 37 off'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 35 off'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 60 off'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 56 off'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 57 off'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 61 off'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 47 off'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 37 off'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 35 off'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 60 off'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 56 off'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 57 off'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 61 off'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 47 off'
 
 #fix minimums
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan t 00 set 5'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan p 0 min 50'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan p 1 min 50'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan p 2 min 50'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan p 3 min 65'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan p 4 min 65'
-sshpass -f "$PASSWD" ssh Administrator@${IP} 'fan p 5 min 65'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan t 00 set 5'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan p 0 min 50'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan p 1 min 50'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan p 2 min 50'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan p 3 min 65'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan p 4 min 65'
+sshpass -f "$PASSWD" ssh ${OPT} Administrator@${IP} 'fan p 5 min 65'
