@@ -42,7 +42,7 @@ The resulting firmware is located in the `build` directory, under the firmware's
 2. Remove power from your server, and enable iLO4 Security Override (for me, this was flipping the first DIP switch on the board).
 3. Boot your server from a baremetal Linux install -- a Ubuntu LiveCD works well.
 4. Ensure any HP modules are unloaded (`sudo modprobe -r hpilo`)
-5. Plug in the USB key, rename the firmware to `ilo4_250.bin`, then run `sudo ./flasher --direct` to patch your server.
+5. Plug in the USB key, rename the firmware to `ilo4_250.bin`, then run `sudo ./flash_ilo4 --direct` to patch your server.
 6. Resist the urge to unplug the system and break everything while flashing. **It will be loud**. It took 2 minutes to erase, and 1 minute to flash.
 7. After patching, shut down and remove power from the server to disable the iLO4 security override.
 
