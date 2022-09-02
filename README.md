@@ -48,7 +48,7 @@ The resulting firmware is located in the `build` directory, under the firmware's
 
 Following the Getting Started steps, here's what I did after building:
 ```bash
-sudo mobprobe -r hpilo
+sudo modprobe -r hpilo
 mkdir -p flash
 cp binaries/flash_ilo4 binaries/CP027911.xml flash/
 cp build/ilo4_277.bin.patched flash/ilo4_250.bin
