@@ -25,7 +25,19 @@ IP=${IP} screen -dmS $SCREEN_NAME
 
 echo -e "Establishing SSH session inside screen."
 
-screen -S $SCREEN_NAME -X stuff "ssh -i ${SSH_KEY} -t  ${SSH_USER}@${IP} -p 2222 -o PubKeyAcceptedKeyTypes=+ssh-rsa -o HostKeyAlgorithms=+ssh-dss -o KexAlgorithms=+diffie-hellman-group14-sha1 -o LocalCommand='fan info' -v"`echo -ne '\015'`
+while [ true ]
+do
+	echo -e "Checking if ${IP} is up."
+	ping -q -c 1 ${IP} &>/dev/null
+	if [ $? -ne 0 ]; then
+		echo "iLO is not responding. Reattempting in 30 seconds.";
+	else
+		break
+	fi
+	sleep 30
+done
+
+screen -S $SCREEN_NAME -X stuff "ssh -i ${SSH_KEY} -t  ${SSH_USER}@${IP} -p 2222 -o PubKeyAcceptedKeyTypes=+ssh-rsa -o HostKeyAlgorithms=+ssh-dss -o KexAlgorithms=+diffie-hellman-group14-sha1 -o LocalCommand='fan info'"`echo -ne '\015'`
 
 echo -e "Sleeping for 5 seconds."
 
