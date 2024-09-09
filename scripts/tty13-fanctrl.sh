@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 # This was made using caffeineflo's cf-dynamic-fans.sh and jazinheira's ja-silence-dl20G9.sh (itself based on aterfax-silence-dl380pG8-screen.sh)
 #
@@ -16,10 +16,11 @@
 # There could be potential benefits using a small USB/SATA powered fan on top of the controller's heat sink.
 #
 # I modified caffeineflo's temperature growth formula to include a logarithmic curve version (exponential speed growth), keeping the fans quiet under no significant load in my homelab.
-# The output includes info to compare both speeds, I found it's much more quiet in most cases
+# The output includes info to compare both speeds, I found it's much more quiet in most cases, while still keeping temperatures within an acceptable range.
 #
 # The script can be activated by a .service unit and will run every 30 seconds
 # Rename this to fanctrl and put it in /usr/local/bin
+# In case you have 2 CPUs, the lines associated with CPU2 are commented out.
 #
 # Required packages: freeipmi, lm-sensors, jq, screen, bc
 # freeipmi might need additional configuration if the os you're executing this on isn't the same as the server you're trying to control.
@@ -37,6 +38,9 @@
 #
 #[Install]
 #WantedBy=multi-user.target
+
+# On my setup, I also call a service on shutdown to reset iLO : that way, the fans stop spinning 100% when rebooting, and ssh session has access to fan info every time.
+# It's simply made with bits of this code (check if screen session is running, etc.) and stuffing "reset map1" in the ssh session. I can share the code if anyone needs it.
 
 
 ### CONFIG GOES HERE :
@@ -61,10 +65,12 @@ SPEED_RANGE=$((MAX_SPEED - MIN_SPEED))  # 215
 ### END CONFIG
 
 # Only one of me should be running :
-if ! pgrep -x fanctrl > /dev/null
+if ! systemctl is-active --quiet fanctrl > /dev/null
 then
 
-#This avoid setting a systemd timer unit and lets the script itself handle the loop (systemd kills child processes
+# This avoid setting a systemd timer unit and lets the script itself handle the loop
+# systemd kills the child process when service called by timer stops, so the screen session get closed and first ssh is lost
+# One could also call this script in two steps, first opening the session with a normal service, then calling the second oneshot with a timer.
 while :
 do
 
@@ -202,6 +208,6 @@ sleep 30
 done
 
 else
-        PID=$(pgrep -x fanctrl)
+        PID=$(systemctl show --property MainPID --value fanctrl)
         echo "fanctrl is already running on PID $PID"
 fi
