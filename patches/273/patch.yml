@@ -1,0 +1,25 @@
+description: iLO 4 v2.73 with fan control patches
+binary:
+  name: ilo4_273.bin
+  url: https://downloads.hpe.com/pub/softlib2/software1/sc-linux-fw-ilo/p192122427/v176128/CP042663.scexe
+checksum:
+  binary: 8303c236c3417814afa0ed4b63e2d1ac48e3e881
+  result: 06e572e9de5926208bfc52998abdc44410672a79
+bootloader:
+- remark: "Patch signature check : BNE XX -> MOV R0, #0"
+  offset: 0x38BC
+  size: 4
+  prev_data: 4000001A
+  patch: 0000A0E1
+kernel:
+- remark: "Patch signature check : BEQ XX -> B XX"
+  offset: 0x1FB48
+  size: 4
+  prev_data: 0400000A
+  patch: 040000EA
+userland:
+- remark: "Bypass signature check : BEQ XX -> B XX"
+  offset: 0x96C2CC
+  size: 4
+  prev_data: 1D 00 00 0A
+  patch: 1D 00 00 EA
