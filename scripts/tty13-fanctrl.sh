@@ -24,8 +24,8 @@ MIN_SPEED=2550 # Set the minimum speed the fans can run at (format is XX.XX°C =
 ### END CONFIG
 
 
-
-
+# To prevent bash from complaining about the locale in some cases where numeric locale uses a comma
+export LC_NUMERIC="C"
 
 # Check if iLO IP is up
 while :; do
