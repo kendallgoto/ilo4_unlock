@@ -15,7 +15,7 @@ Python 2.7 is required. I built everything on CentOS 8; Other OS/environments mi
 
 _pro tip! if you're doing this all on a Live CD to flash, make sure you disable iLO security first, or you'll have to restart. See Flashing Firmware for more info_
 
-Here is my setup for my Ubuntu 21.10 Live CD:
+Here is my setup for my Ubuntu 22.04 Live CD (as of 2024-12-12):
 ```bash
 sudo apt-add-repository universe
 sudo apt update
