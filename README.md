@@ -28,7 +28,12 @@ python2 -m virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
-
+Or using docker for the build enviroment (works on any distribution):
+```bash
+git clone --recurse-submodules https://github.com/kendallgoto/ilo4_unlock.git
+cd ilo4_unlock
+docker build -t ilo4_unlock .
+```
 ## Building Firmware
 ``` bash
 ./build.sh init # download necessary HPE binaries
@@ -36,6 +41,14 @@ pip install -r requirements.txt
 ./build.sh 277  # generate iLO v2.77 patched firmware
 # The build setup creates a build/ folder where all the artifacts are stored. The final firmware location will be printed at the end of the script, if no errors are produced.
 ```
+Or if you are using the docker container. Make sure you are in the `ilo4_unlock` directory first.
+```bash
+docker run --rm -it -v $(pwd):/app ilo4_unlock:latest init # download necessary HPE binaries
+#docker run --rm -it -v $(pwd):/app ilo4_unlock:latest [patch-name] -- see patches/ folder for more info on each patch!
+docker run --rm -it -v $(pwd):/app ilo4_unlock:latest 277  # generate iLO v2.77 patched firmware
+# The build setup creates a build/ folder where all the artifacts are stored. The final firmware location will be printed at the end of the script, if no errors are produced.
+```
+
 ## Flashing Firmware
 The resulting firmware is located in the `build` directory, under the firmware's name (e.g. `build/ilo4_273.bin.patched` for v2.73 builds). I suggest the following steps to flash the firmware, as you cannot do it from the web interface:
 1. Copy the resulting firmware to a USB key, along with the flasher files (`binaries/flash_ilo4` & `binaries/CP027911.xml`)
