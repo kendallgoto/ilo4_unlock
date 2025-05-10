@@ -1,4 +1,4 @@
-FROM debian:10-slim
+FROM debian:11.11-slim
 
 RUN apt-get update && \ 
     apt-get install -y python2-minimal git curl wget && \

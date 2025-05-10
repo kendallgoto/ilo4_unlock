@@ -20,7 +20,6 @@ set -e
 if [ "$#" -eq 0 ]; then
     /app/build.sh init
     /app/build.sh latest
-    exit 1
+else
+    /app/build.sh "$@"
 fi
-
-/app/build.sh "$@"
