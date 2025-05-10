@@ -43,10 +43,11 @@ docker build -t ilo4_unlock .
 ```
 Or if you are using the docker container. Make sure you are in the `ilo4_unlock` directory first.
 ```bash
-docker run --rm -it -v $(pwd):/app ilo4_unlock:latest init # download necessary HPE binaries
-#docker run --rm -it -v $(pwd):/app ilo4_unlock:latest [patch-name] -- see patches/ folder for more info on each patch!
-docker run --rm -it -v $(pwd):/app ilo4_unlock:latest 277  # generate iLO v2.77 patched firmware
-# The build setup creates a build/ folder where all the artifacts are stored. The final firmware location will be printed at the end of the script, if no errors are produced.
+docker run --rm -it -v $(pwd):/app ilo4_unlock:latest # Will download firmware and patch the latest firmware
+```
+You can also pass any argument that the `./build.sh` supports:
+```bash
+docker run --rm -it -v $(pwd):/app ilo4_unlock:latest [Arguments]
 ```
 
 ## Flashing Firmware

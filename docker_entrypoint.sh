@@ -13,5 +13,14 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
+
 source /home/python/venv/bin/activate
-/app/build.sh $1
+set -e
+
+if [ "$#" -eq 0 ]; then
+    /app/build.sh init
+    /app/build.sh latest
+    exit 1
+fi
+
+/app/build.sh "$@"
