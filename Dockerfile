@@ -1,4 +1,4 @@
-FROM debian:11.11-slim
+FROM debian:bullseye-slim
 
 RUN apt-get update && \ 
     apt-get install -y python2-minimal git curl wget && \
@@ -18,5 +18,7 @@ RUN mkdir /home/python && \
     python2 -m virtualenv /home/python/venv 
 
 RUN /bin/bash -c "source /home/python/venv/bin/activate && pip install -r /app/requirements.txt"
+
+RUN git config --global --add safe.directory /app
 
 ENTRYPOINT [ "/app/docker_entrypoint.sh" ]
