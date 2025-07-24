@@ -1,0 +1,6 @@
+.git
+Dockerfile
+venv/
+build/
+binaries/
+*.pyc
