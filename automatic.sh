@@ -39,6 +39,4 @@ cp binaries/flash_ilo4 binaries/CP027911.xml flash/
 cp build/ilo4_*.bin.patched flash/ilo4_250.bin
 
 cd flash
-cwd=$(pwd)
-
-echo "Ready to flash! Run sudo ./flash_ilo4 --direct inside $CWD"
+echo "Ready to flash! Run sudo ./flash_ilo4 --direct inside $(pwd)"
