@@ -21,20 +21,20 @@ exit_help() {
     echo "       \"$0 [patch-name]\" to directly build a patch from patches/"
     exit 1
 }
+
 check_hash() {
-	HASH=`sha1sum "$1" | cut -d' ' -f1`
-	if [ "$HASH" != "$2" ]; then
-		echo "Binary hash mismatch ... please init again."
-		exit 1
-	fi
+    HASH=$(sha1sum "$1" | cut -d' ' -f1)
+    if [ "$HASH" != "$2" ]; then
+        echo "Binary hash mismatch ... please init again."
+        exit 1
+    fi
     echo "Hash validated for $1"
 }
 build_process() {
-    ROOT_DIR=`git rev-parse --show-toplevel`
-    SCRIPT_DIR="$ROOT_DIR/ilo4_toolbox/scripts/iLO4"
-    UTIL_DIR="$ROOT_DIR/util"
+    SCRIPT_DIR="ilo4_toolbox/scripts/iLO4"
+    UTIL_DIR="util"
     BUILD_LOC=$(realpath "$3")
-    DIR=`dirname $1`
+    DIR=$(dirname "$1")
     FIRMWARE="$2"
     DEST="$BUILD_LOC/$(basename "$FIRMWARE").patched"
 
@@ -70,11 +70,11 @@ run_patch() {
     fi
 }
 do_init() {
-	echo "Downloading binaries ..."
-	rm -rf binaries/
-	mkdir -p binaries/
-	for d in patches/* ; do
-		if [ -d "$d" ]; then
+    echo "Downloading binaries ..."
+    rm -rf binaries/
+    mkdir -p binaries/
+    for d in patches/* ; do
+        if [ -d "$d" ]; then
             if [ -f "$d/config" ]; then
                 source "$d/config"
                 if [ -f "./binaries/$BINARY_NAME" ]; then
@@ -92,14 +92,14 @@ do_init() {
                     check_hash "binaries/$BINARY_NAME" "$BINARY_SHA1"
                 fi
             fi
-		fi
-	done
-	echo "Downloaded binaries to to ./binaries"
-	ls -al binaries
-	exit 0
+        fi
+    done
+    echo "Downloaded binaries to to ./binaries"
+    ls -al binaries
+    exit 0
 }
 get_latest() {
-    latest_patch=`cat ./patches/latest`
+    latest_patch=$(cat ./patches/latest)
     run_patch $latest_patch
 }
 
@@ -113,13 +113,13 @@ set -e
 cd "${0%/*}" # cd to script location
 
 case $1 in
-	init)
-		do_init
+    init)
+        do_init
 ;;
     "latest")
         get_latest
 ;;
-	*)
-		run_patch $1
+    *)
+        run_patch $1
 ;;
 esac

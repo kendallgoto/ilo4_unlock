@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:bullseye-slim AS builder
 
 RUN apt-get update && \ 
     apt-get install -y python2-minimal git curl wget && \
@@ -11,9 +11,13 @@ RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && \
 RUN python2 -m pip install virtualenv
 
 WORKDIR /app
-COPY requirements.txt docker_entrypoint.sh .
+COPY . .
 RUN python2 -m virtualenv venv
 RUN /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt"
 RUN git config --global --add safe.directory /app
 
-ENTRYPOINT [ "/app/docker_entrypoint.sh" ]
+RUN /bin/bash -c "source venv/bin/activate && ./build.sh init && ./build.sh latest"
+
+FROM scratch
+COPY --from=builder /app/binaries/flash_ilo4 /app/binaries/CP027911.xml /
+COPY --from=builder /app/build/ilo4_*.bin.patched /ilo4_250.bin
