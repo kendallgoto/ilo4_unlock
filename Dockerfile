@@ -11,14 +11,9 @@ RUN curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && \
 RUN python2 -m pip install virtualenv
 
 WORKDIR /app
-
-COPY ./requirements.txt /app
-
-RUN mkdir /home/python && \
-    python2 -m virtualenv /home/python/venv 
-
-RUN /bin/bash -c "source /home/python/venv/bin/activate && pip install -r /app/requirements.txt"
-
+COPY requirements.txt docker_entrypoint.sh .
+RUN python2 -m virtualenv venv
+RUN /bin/bash -c "source venv/bin/activate && pip install -r requirements.txt"
 RUN git config --global --add safe.directory /app
 
 ENTRYPOINT [ "/app/docker_entrypoint.sh" ]
