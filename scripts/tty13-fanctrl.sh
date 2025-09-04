@@ -46,7 +46,7 @@ if ! screen -list | grep -q "$SCREEN_NAME"; then
         echo -e "Establishing SSH session inside screen."
 
 
-        screen -S $SCREEN_NAME -X stuff "ssh -i ${SSH_KEY} -t  ${SSH_USER}@${IP} -o PubKeyAcceptedKeyTypes=+ssh-rsa -o HostKeyAlgorithms=+ssh-dss -o KexAlgorithms=+diffie-hellman-group14-sha1 -o LocalCommand='fan info'"`echo -ne '\015'`
+        screen -S $SCREEN_NAME -X stuff "ssh -i ${SSH_KEY} -t  ${SSH_USER}@${IP} -o PubKeyAcceptedKeyTypes=+ssh-rsa -o HostKeyAlgorithms=+ssh-rsa -o KexAlgorithms=+diffie-hellman-group14-sha1 -o LocalCommand='fan info'"`echo -ne '\015'`
         # `echo -ne '\015'` emulates pressing the Enter key.
 
         # Wait
