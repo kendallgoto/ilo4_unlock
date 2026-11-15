@@ -1,0 +1,30 @@
+[
+	{
+		"remark": "Bypass signature check : BEQ XX -> B XX",
+		"offset": "0x964dfc",
+		"size": 4,
+		"prev_data": "1D 00 00 0A",
+		"patch": "1D 00 00 EA"
+	},
+	{
+		"remark": "Add function handler for new functions",
+		"offset": "0xaf16b0",
+		"size": 116,
+		"prev_data": "0D C0 A0 E1 20 D8 2D E9 04 B0 4C E2 8B 13 00 EB 9A 1F 8F E2 00 50 A0 E1 FE 96 00 EB 54 12 9F E5 04 00 95 E5 01 00 50 E1 09 00 00 1A 02 00 A0 E3 28 00 85 E5 08 00 A0 E3 60 00 85 E5 00 00 A0 E3 98 00 85 E5 2C 02 9F E5 36 00 00 EB 91 1F 8F E2 05 00 00 EA 04 00 A0 E3 28 00 85 E5 00 00 A0 E3 60 00 85 E5 98 00 85 E5 8B 1F 8F E2 04 00 95 E5 65 D7 FF EB",
+		"file": "fn_handler.S"
+	},
+	{
+		"remark": "Rename `NULL_CMD` to `FAN`",
+		"offset": "0xb74418",
+		"size": 8,
+		"prev_data": "4E 55 4C 4C 5F 43 4D 44",
+		"patch": "46 41 4E 00 00 00 00 00"
+	},
+	{
+		"remark": "Add entry jump to fan",
+		"offset": "0xb8b8c4",
+		"size": 4,
+		"prev_data": "5C D1 01 00",
+		"patch": "64 D1 01 00"
+	}
+]

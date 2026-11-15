@@ -1,0 +1,5 @@
+NAME="282-tools"
+BINARY_NAME="ilo4_282.bin"
+BINARY_URL="https://downloads.hpe.com/pub/softlib2/software1/sc-linux-fw-ilo/p192122427/v218149/CP053894.scexe"
+BINARY_SHA1="d1d4badc258603370b7cc5a2c362936e8e6b0fa9"
+RESULT_SHA1="91bf91ac12da33ad25b97dc53033cfc32b3e6c57"

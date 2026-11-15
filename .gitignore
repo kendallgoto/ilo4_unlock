@@ -1,4 +1,5 @@
 /venv/
 /build/
 /binaries/
+/build_extract/
 *.pyc

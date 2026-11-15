@@ -1,0 +1,5 @@
+NAME="280-fan"
+BINARY_NAME="ilo4_280.bin"
+BINARY_URL="https://downloads.hpe.com/pub/softlib2/software1/sc-linux-fw-ilo/p192122427/v209058/CP050768.scexe"
+BINARY_SHA1="3438f7af4147b8dd51a3131c665903c43d14a8d3"
+RESULT_SHA1="ec9f754c47d854c76fc3e50a6946f8b985d93337"

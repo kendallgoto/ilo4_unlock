@@ -1,0 +1,595 @@
+{
+ "missing_functions": {
+  "0xe1589c": {
+   "size": 700,
+   "ninsn": 175
+  },
+  "0xe16970": {
+   "size": 13424,
+   "ninsn": 3356
+  },
+  "0xe2326c": {
+   "size": 4836,
+   "ninsn": 1209
+  },
+  "0xe274c8": {
+   "size": 1008,
+   "ninsn": 252
+  },
+  "0xe2d0c4": {
+   "size": 1668,
+   "ninsn": 417
+  },
+  "0xe2e338": {
+   "size": 988,
+   "ninsn": 247
+  },
+  "0xe2dfd4": {
+   "size": 24,
+   "ninsn": 6,
+   "note": "resolved via caller-tracing: called only from 0xe16970 (fan handler), not present in 2.80 -- genuinely missing, not an external ref"
+  },
+  "0xe32b80": {
+   "size": 320,
+   "ninsn": 80
+  },
+  "0xe3c148": {
+   "size": 4264,
+   "ninsn": 1066
+  },
+  "0xe7d3e0": {
+   "size": 756,
+   "ninsn": 189
+  },
+  "0xe7dab8": {
+   "size": 12,
+   "ninsn": 3
+  },
+  "0xe7dac4": {
+   "size": 120,
+   "ninsn": 30
+  },
+  "0xe7db3c": {
+   "size": 316,
+   "ninsn": 79
+  },
+  "0xe7e6c0": {
+   "size": 80,
+   "ninsn": 20
+  },
+  "0xe7e710": {
+   "size": 80,
+   "ninsn": 20
+  }
+ },
+ "external_map": {
+  "0xdfab58": {
+   "target": "0xdf96cc",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0a990": {
+   "target": "0xe09504",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0aa50": {
+   "target": "0xe095c4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0b19c": {
+   "target": "0xe09d10",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0b5c0": {
+   "target": "0xe0a134",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0b718": {
+   "target": "0xe0a28c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0ba08": {
+   "target": "0xe0a57c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0bbd8": {
+   "target": "0xe0a74c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0ca88": {
+   "target": "0xe0b5fc",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0ce68": {
+   "target": "0xe0b9dc",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0d820": {
+   "target": "0xe0c394",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0db84": {
+   "target": "0xe0c6f8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0dd14": {
+   "target": "0xe0c888",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0e1c4": {
+   "target": "0xe0cd38",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0e244": {
+   "target": "0xe0cdb8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe0f9ec": {
+   "target": "0xe0e560",
+   "confidence": "unique_signature_match"
+  },
+  "0xe10d30": {
+   "target": "0xe0f888",
+   "confidence": "unique_signature_match"
+  },
+  "0xe110b0": {
+   "target": "0xe0fc04",
+   "confidence": "unique_signature_match"
+  },
+  "0xe13fec": {
+   "target": "0xe12b48",
+   "confidence": "unique_signature_match"
+  },
+  "0xe14094": {
+   "target": "0xe12bf0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe14c14": {
+   "target": "0xe13770",
+   "confidence": "unique_signature_match"
+  },
+  "0xe14dbc": {
+   "target": "0xe13918",
+   "confidence": "unique_signature_match"
+  },
+  "0xe1bbfc": {
+   "target": "0xe16094",
+   "confidence": "unique_signature_match"
+  },
+  "0xe1fe60": {
+   "target": "0xe1a2f8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe1fea4": {
+   "target": "0xe1a33c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe20c0c": {
+   "target": "0xe1b0a4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe20cd8": {
+   "target": "0xe1b170",
+   "confidence": "unique_signature_match"
+  },
+  "0xe20db8": {
+   "target": "0xe1b250",
+   "confidence": "unique_signature_match"
+  },
+  "0xe20ed0": {
+   "target": "0xe1b368",
+   "confidence": "unique_signature_match"
+  },
+  "0xe21124": {
+   "target": "0xe1b5bc",
+   "confidence": "unique_signature_match"
+  },
+  "0xe213ec": {
+   "target": "0xe1b884",
+   "confidence": "unique_signature_match"
+  },
+  "0xe21d18": {
+   "target": "0xe1c1b0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe22d7c": {
+   "target": "0xe1d214",
+   "confidence": "unique_signature_match"
+  },
+  "0xe270dc": {
+   "target": "0xe21574",
+   "confidence": "unique_signature_match"
+  },
+  "0xe27108": {
+   "target": "0xe215a0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2713c": {
+   "target": "0xe215d4",
+   "confidence": "resolved_ambiguous (literal-value or call-correlation or ordinal match)"
+  },
+  "0xe271cc": {
+   "target": "0xe21664",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2bfbc": {
+   "target": "0xe264d8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2c03c": {
+   "target": "0xe26558",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2c0a8": {
+   "target": "0xe265c4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2c15c": {
+   "target": "0xe26678",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2c350": {
+   "target": "0xe2686c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2cc6c": {
+   "target": "0xe27188",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2cd30": {
+   "target": "0xe2724c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2ce10": {
+   "target": "0xe2732c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2cf8c": {
+   "target": "0xe274a8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2df1c": {
+   "target": "0xe28438",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2dfa0": {
+   "target": "0xe284bc",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2e08c": {
+   "target": "0xe28508",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2e754": {
+   "target": "0xe28b44",
+   "confidence": "unique_signature_match"
+  },
+  "0xe2e954": {
+   "target": "0xe28d44",
+   "confidence": "unique_signature_match"
+  },
+  "0xe32934": {
+   "target": "0xe2cba0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe35a6c": {
+   "target": "0xe2d4cc",
+   "confidence": "unique_signature_match"
+  },
+  "0xe35c90": {
+   "target": "0xe2d6f0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe35cd0": {
+   "target": "0xe2d730",
+   "confidence": "unique_signature_match"
+  },
+  "0xe35ef0": {
+   "target": "0xe2d950",
+   "confidence": "unique_signature_match"
+  },
+  "0xe35fe4": {
+   "target": "0xe2da44",
+   "confidence": "unique_signature_match"
+  },
+  "0xe3601c": {
+   "target": "0xe2da7c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe3604c": {
+   "target": "0xe2daac",
+   "confidence": "unique_signature_match"
+  },
+  "0xe360b0": {
+   "target": "0xe2db10",
+   "confidence": "unique_signature_match"
+  },
+  "0xe362a8": {
+   "target": "0xe2dd08",
+   "confidence": "unique_signature_match"
+  },
+  "0xe363c4": {
+   "target": "0xe2de24",
+   "confidence": "unique_signature_match"
+  },
+  "0xe36810": {
+   "target": "0xe2e270",
+   "confidence": "unique_signature_match"
+  },
+  "0xe36ec0": {
+   "target": "0xe2e920",
+   "confidence": "unique_signature_match"
+  },
+  "0xe372d4": {
+   "target": "0xe2ed34",
+   "confidence": "unique_signature_match"
+  },
+  "0xe37578": {
+   "target": "0xe2efd8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe376ac": {
+   "target": "0xe2f10c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe37740": {
+   "target": "0xe2f1a0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe377e4": {
+   "target": "0xe2f244",
+   "confidence": "unique_signature_match"
+  },
+  "0xe383f4": {
+   "target": "0xe2fe54",
+   "confidence": "unique_signature_match"
+  },
+  "0xe38808": {
+   "target": "0xe30268",
+   "confidence": "unique_signature_match"
+  },
+  "0xe389dc": {
+   "target": "0xe3043c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe38e44": {
+   "target": "0xe308a4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe39174": {
+   "target": "0xe30bd4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe39528": {
+   "target": "0xe30f88",
+   "confidence": "unique_signature_match"
+  },
+  "0xe398f8": {
+   "target": "0xe31358",
+   "confidence": "unique_signature_match"
+  },
+  "0xe39ab8": {
+   "target": "0xe31518",
+   "confidence": "unique_signature_match"
+  },
+  "0xe39c10": {
+   "target": "0xe31670",
+   "confidence": "unique_signature_match"
+  },
+  "0xe3a0a8": {
+   "target": "0xe31b08",
+   "confidence": "unique_signature_match"
+  },
+  "0xe3a8bc": {
+   "target": "0xe3231c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe3af54": {
+   "target": "0xe329b4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe3c0a8": {
+   "target": "0xe33b08",
+   "confidence": "unique_signature_match"
+  },
+  "0xe53a94": {
+   "target": "0xe4b300",
+   "confidence": "unique_signature_match"
+  },
+  "0xe53dac": {
+   "target": "0xe4b618",
+   "confidence": "unique_signature_match"
+  },
+  "0xe559bc": {
+   "target": "0xe4d228",
+   "confidence": "unique_signature_match"
+  },
+  "0xe5a934": {
+   "target": "0xe521a0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe5b364": {
+   "target": "0xe52bd0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe5b3e4": {
+   "target": "0xe52c50",
+   "confidence": "unique_signature_match"
+  },
+  "0xe5f4a4": {
+   "target": "0xe56d10",
+   "confidence": "unique_signature_match"
+  },
+  "0xe60654": {
+   "target": "0xe57ec0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe606bc": {
+   "target": "0xe57f28",
+   "confidence": "unique_signature_match"
+  },
+  "0xe60744": {
+   "target": "0xe57fb0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe6111c": {
+   "target": "0xe58988",
+   "confidence": "unique_signature_match"
+  },
+  "0xe611dc": {
+   "target": "0xe58a48",
+   "confidence": "unique_signature_match"
+  },
+  "0xe62324": {
+   "target": "0xe59b90",
+   "confidence": "unique_signature_match"
+  },
+  "0xe74348": {
+   "target": "0xe6bbb4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe74374": {
+   "target": "0xe6bbe0",
+   "confidence": "resolved_ambiguous (literal-value or call-correlation or ordinal match)"
+  },
+  "0xe743a8": {
+   "target": "0xe6bc14",
+   "confidence": "unique_signature_match"
+  },
+  "0xe762b8": {
+   "target": "0xe6db24",
+   "confidence": "unique_signature_match"
+  },
+  "0xe76564": {
+   "target": "0xe6ddd0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe768f8": {
+   "target": "0xe6e164",
+   "confidence": "unique_signature_match"
+  },
+  "0xe76cc0": {
+   "target": "0xe6e52c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe76d24": {
+   "target": "0xe6e590",
+   "confidence": "unique_signature_match"
+  },
+  "0xe76d8c": {
+   "target": "0xe6e5f8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe76e48": {
+   "target": "0xe6e6b4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe76f8c": {
+   "target": "0xe6e7f8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe77198": {
+   "target": "0xe6ea04",
+   "confidence": "unique_signature_match"
+  },
+  "0xe771d0": {
+   "target": "0xe6ea3c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe77234": {
+   "target": "0xe6eaa0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe773a8": {
+   "target": "0xe6ec14",
+   "confidence": "unique_signature_match"
+  },
+  "0xe774cc": {
+   "target": "0xe6ed38",
+   "confidence": "unique_signature_match"
+  },
+  "0xe77838": {
+   "target": "0xe6f0a4",
+   "confidence": "unique_signature_match"
+  },
+  "0xe778d4": {
+   "target": "0xe6f140",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79928": {
+   "target": "0xe71194",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79964": {
+   "target": "0xe711d0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe7998c": {
+   "target": "0xe711f8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79ac8": {
+   "target": "0xe71334",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79cac": {
+   "target": "0xe71518",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79d0c": {
+   "target": "0xe71578",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79d50": {
+   "target": "0xe715bc",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79d8c": {
+   "target": "0xe715f8",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79db8": {
+   "target": "0xe71624",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79e18": {
+   "target": "0xe71684",
+   "confidence": "resolved_ambiguous (literal-value or call-correlation or ordinal match)"
+  },
+  "0xe79f08": {
+   "target": "0xe71774",
+   "confidence": "unique_signature_match"
+  },
+  "0xe79fb0": {
+   "target": "0xe7181c",
+   "confidence": "resolved_ambiguous (literal-value or call-correlation or ordinal match)"
+  },
+  "0xe7a040": {
+   "target": "0xe718ac",
+   "confidence": "resolved_ambiguous (literal-value or call-correlation or ordinal match)"
+  },
+  "0xe7a064": {
+   "target": "0xe718d0",
+   "confidence": "unique_signature_match"
+  },
+  "0xe7a0d4": {
+   "target": "0xe71940",
+   "confidence": "unique_signature_match"
+  },
+  "0xe7a130": {
+   "target": "0xe7199c",
+   "confidence": "unique_signature_match"
+  },
+  "0xe7a63c": {
+   "target": "0xe71ea8",
+   "confidence": "resolved_ambiguous (literal-value or call-correlation or ordinal match)"
+  },
+  "0xe7a664": {
+   "target": "0xe720cc",
+   "confidence": "resolved_ambiguous (literal-value or call-correlation or ordinal match)"
+  },
+  "0xe2eb6c": {
+   "target": "0xe28f58",
+   "confidence": "unique_signature_match (filler pass)"
+  }
+ }
+}
