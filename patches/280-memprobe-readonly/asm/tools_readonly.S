@@ -33,10 +33,15 @@
 @ typing "help" with no valid subcommand should echo arg[1] and r8),
 @ and cmd_read unmodified.
 @
-@ Usage over SSH, identical to the original: `help r<hex-address>`
-@ followed by the byte count stored at task-local offset 0x364 (same
-@ convention as the original -- set via whatever existing mechanism the
-@ shell uses to populate that field, unchanged here).
+@ Usage over SSH, identical to the original: `help r<ADDR> <N>`, where
+@ ADDR is NOT standard hex -- each nibble is a letter A-P (A=0 ... P=15),
+@ per the _addr_loop decode below -- and <N> is a second, space-separated
+@ argument whose first raw byte (stored at task-local offset 0x364 by the
+@ CLI's own argument-splitting, confirmed 2026-11-14 hardware-tested; see
+@ research/2026-11-14-memprobe-readonly-confirmed-working.md) becomes the
+@ read count, unparsed. E.g. `help rCBPJM 0` reads 0x30=48 bytes starting
+@ at task-local 0x21F9C. The printed address for each byte is off by one
+@ (prints byte_address+1); subtract 1 when reading a dump.
 
 .syntax unified
 .arm

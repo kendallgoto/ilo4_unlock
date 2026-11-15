@@ -1,5 +1,13 @@
 # iLO 2.80 minimal read-only memory probe
 
+**Result: CONFIRMED WORKING on real hardware, 2026-11-14.** First
+hardware-confirmed live memory read on 2.80+. See
+`research/2026-11-14-memprobe-readonly-confirmed-working.md` for the full
+writeup, including an important command-syntax correction and a hardware
+false-alarm from the first attempt that turned out to be user-input
+related, not a firmware defect. Short version if you just want to use it:
+see "Usage" below -- the original usage line here was wrong.
+
 Tests whether `patches/280-tools`'s still-unidentified brick cause is
 specific to one of its removed capabilities, by flashing a much smaller
 version of the same technique that only implements read-only memory
@@ -67,30 +75,48 @@ already-present, already-executable, already-correctly-permissioned
 module -- the same technique as `patches/277-tools`, entirely unrelated
 to the now-closed VirtRange re-attribution investigation.
 
-## How to read the result
+## Result (2026-11-14)
 
-- **If this bricks with 270**: the brick is not specific to write,
-  execute, or the malloc/free references -- something about the core
-  read-primitive, the bootstrap mechanism, or the injection point itself
-  is the actual cause, and the mystery deepens rather than resolves.
-- **If this boots fine**: the brick cause is isolated to one of the
-  removed capabilities (most likely write or execute, given they're the
-  only primitives capable of directly corrupting memory or jumping
-  somewhere unintended). This would also be the project's first live
-  memory-read capability on 2.80+, enabling direct verification of
-  claims this session has so far only established statically (e.g. live
-  inspection of entry 2's contents, confirming or refining the
-  bootstrap-pointer finding with real runtime data instead of static
-  inference).
+Boots clean (full `diag9` checklist passed: no POST 270, correct version
+readback, ping, SSH, web UI). **Confirmed isolated to one of the removed
+capabilities** -- read-only at this exact slot is safe, so `280-tools`'s
+still-unexplained brick is narrowed specifically to write, execute, or the
+malloc/free references, not the slot or the bootstrap mechanism. This is
+also the project's first confirmed live memory-read capability on 2.80+.
+Full narrative, including a hardware false-alarm from a user-input mistake
+on the first attempt (not a firmware defect) and independent verification
+of the read data against an ARM disassembly: see
+`research/2026-11-14-memprobe-readonly-confirmed-working.md`.
 
-## How to verify the result on hardware
+## Usage (corrected 2026-11-14 -- the original wording below was wrong)
 
-See `patches/280-diag9-rights-flip-existing-entry/readme.md`'s checklist
-(POST, iLO version readback, network ping, SSH shell, web UI -- a missing
-POST error alone isn't sufficient). If all five pass, also try the probe
-itself over SSH: `help r<hex-address>` should echo back readable memory
-without a shell crash, confirming the read path actually works end to
-end, not just that the firmware boots with the patch present.
+`help r<ADDR> <N>` where:
+
+- **`<ADDR>` is NOT standard hex.** Each nibble is encoded as a letter
+  `A`-`P` (A=0, B=1, ... P=15), inherited unchanged from the original
+  Airbus/phoenixdev `tools.S`. Typing ordinary hex digits (`0`-`9`/`a`-`f`)
+  will silently resolve to address `0` instead of erroring -- which is
+  exactly what happened on this build's first hardware test and hung that
+  SSH session (see the research note for why: a null-pointer read, not a
+  general firmware brick -- new connections were unaffected). Example:
+  `0x21F9C` -> nibbles `2,1,F,9,C` -> `CBPJM`.
+- **`<N>` is a separate, space-separated argument, and its first raw byte
+  (not parsed as a number) is the read count.** E.g. a literal `0`
+  character (ASCII `0x30`) requests 48 bytes. This was never a
+  user-settable "count field" in the way earlier readmes (including this
+  one) assumed -- see the research note for how this was finally pinned
+  down, resolving a question open since `research/2022-02-17-docs.md`.
+- **The printed address for each byte is off by one** (prints
+  `byte_address + 1`, not the byte's own address) -- subtract 1 from every
+  line before using it.
+- **Scope**: this reads memory inside the **ConAppCLI** (SSH/CLI shell)
+  task's own address partition only, not Health's -- see the research note
+  for why that matters for this project's actual `fan`-restoration goal.
+
+Full example that produces real, verifiable output: `help rCBPJM 0` reads
+48 bytes starting at `GrabContext_fn`'s own address, which decodes as a
+textbook ARM function prologue -- see the research note for the byte-level
+verification.
 
 ## What was verified (static)
 
