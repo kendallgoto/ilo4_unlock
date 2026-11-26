@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS builder
+FROM debian:trixie-slim AS builder
 
 RUN apt-get update && \
     apt-get install -y python3 python3-pip python3-venv curl wget && \
