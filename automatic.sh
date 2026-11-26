@@ -22,14 +22,12 @@
 set -e
 sudo apt-add-repository -y universe
 sudo apt update
-sudo apt-get install -y python2-minimal git curl
-curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && sudo python2 get-pip.py
-python2 -m pip install virtualenv
+sudo apt-get install -y python3 python3-pip python3-venv git curl
 git clone --recurse-submodules https://github.com/kendallgoto/ilo4_unlock.git
 cd ilo4_unlock
-python2 -m virtualenv venv
+python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ./build.sh init
 ./build.sh latest
 
