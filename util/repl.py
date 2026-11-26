@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # This file is part of ilo4_unlock (https://github.com/kendallgoto/ilo4_unlock/).
 # Copyright (c) 2022 Kendall Goto
@@ -27,6 +27,10 @@ assembles, allocates and writes custom code to memory.
 
 Use at your own risk.
 """
+from __future__ import print_function
+from builtins import input
+from builtins import str
+from builtins import range
 import keystone
 import paramiko
 import argparse
@@ -105,12 +109,12 @@ def send_custom(op, arg1, *args):
     return output.strip(b'\r\n')
 def exec_read(cmd):
     if len(cmd) < 3:
-        print "r [address] [len]"
+        print("r [address] [len]")
         return
     addr = int(cmd[1], 0)
     result = send_custom('r', addr, cmd[2])
-    print hexdump(result)
-    print result
+    print(hexdump(result))
+    print(result)
     return result
 def exec_write_partial(addr, data):
     if not data:
@@ -123,7 +127,7 @@ def exec_write_partial(addr, data):
     assert len(all_lines) == size
     for i, line in enumerate(all_lines):
             logger.debug(line)
-            expected = '%#x <- %#x' % (addr + i, bytearray(data[i])[0])
+            expected = '%#x <- %#x' % (addr + i, data[i])
             if expected.endswith(' <- 0x0'):
                 expected = '%#x <- 0' % (addr+i)
             if expected != line:
@@ -133,10 +137,10 @@ def exec_write_partial(addr, data):
 def exec_write(cmd):
     # w [address] [data]
     if len(cmd) < 3:
-        print "w [address] [data]"
+        print("w [address] [data]")
         return
     addr = int(cmd[1], 0)
-    data = cmd[2]
+    data = cmd[2].encode("ascii") if isinstance(cmd[2], str) else cmd[2]
     while data:
         size, data = exec_write_partial(addr, data)
         addr += size
@@ -144,7 +148,7 @@ def exec_write(cmd):
 def exec_exec(cmd):
     # x [address]
     addr = int(cmd[1], 0)
-    print send_custom('x', addr)
+    print(send_custom('x', addr))
 
 def exec_alloc(cmd):
     # a [size]
@@ -154,18 +158,18 @@ def exec_alloc(cmd):
         logger.error("OUT OF MEMORY")
     prefix = b'alloc 0x'
     assert output.startswith(prefix)
-    print output
+    print(output)
     return int(output[len(prefix):], 16)
 
 def exec_free(cmd):
     # f [address]
     addr = int(cmd[1], 0)
-    print send_custom('f', addr)
+    print(send_custom('f', addr))
 
 def exec_write_file(cmd):
     # wf [file]
     if len(cmd) < 2:
-        print "wf [file]"
+        print("wf [file]")
         return
     try:
         patch = read_patch(cmd[1])
@@ -173,34 +177,34 @@ def exec_write_file(cmd):
         logger.error("failed to assemble patch")
         return
     addr = exec_alloc(['a', str(len(patch)+16)])
-    print "allocated 0x%x bytes at 0x%x" % (len(patch)+16, addr)
+    print("allocated 0x%x bytes at 0x%x" % (len(patch)+16, addr))
     exec_write(['w', "0x%x" % addr, patch])
-    print "wrote to 0x%x, execute with x 0x%x" % (addr, addr)
+    print("wrote to 0x%x, execute with x 0x%x" % (addr, addr))
 
 def exec_write_bin(cmd):
     # wb [file]
     if len(cmd) < 2:
-        print "wb [file]"
+        print("wb [file]")
         return
     with open(cmd[1], 'rb') as f:
         patch = f.read()
 
     addr = exec_alloc(['a', str(len(patch)+16)])
-    print "allocated 0x%x bytes at 0x%x" % (len(patch)+16, addr)
+    print("allocated 0x%x bytes at 0x%x" % (len(patch)+16, addr))
     exec_write(['w', "0x%x" % addr, patch])
-    print "wrote to 0x%x, execute with x 0x%x" % (addr, addr)
+    print("wrote to 0x%x, execute with x 0x%x" % (addr, addr))
 def exec_setcmd(cmd):
     #sc [addr]
     if len(cmd) < 2:
-        print "sc [addr]"
+        print("sc [addr]")
         return
     addr = int(cmd[1], 0)
     exec_write(['w', "0x000BAB98", struct.pack('<I', addr)])
-    print "wrote null_cmd to 0x%x" % addr
+    print("wrote null_cmd to 0x%x" % addr)
 def exec_plain(cmd):
     cmd.pop(0)
     fullcmd = " ".join(cmd)
-    print srp(fullcmd + b'\r')
+    print(srp(fullcmd.encode("ascii") + b'\r'))
 parser = argparse.ArgumentParser(description="SSH Tools for iLO4_unlock")
 parser.add_argument('addr', help="IP of iLO")
 parser.add_argument('-u', '--user', type=str, default='Administrator', help="iLO Username")
@@ -209,7 +213,7 @@ parser.add_argument('-P', '--port', type=int, default=22, help="SSH Port")
 
 args = parser.parse_args()
 
-logger = logging.getLogger('ssh')
+client.connect(args.addr, args.port, username=args.user, password=args.password, timeout=30, allow_agent=False, look_for_keys=False)
 logger.info("Connecting ...")
 client = paramiko.client.SSHClient()
 client.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
@@ -225,7 +229,7 @@ run_command('show')
 logger.info("ready")
 
 while True:
-    cmd = raw_input("> ")
+    cmd = input("> ").split(' ')
     cmd = cmd.split(' ')
     if cmd[0] == 'r':
         exec_read(cmd)

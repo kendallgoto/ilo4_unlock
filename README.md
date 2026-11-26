@@ -11,7 +11,7 @@ There is risk for potential damage to your system when utilizing this code. If a
 This repo does not contain any iLO 4 binaries; unmodified or patched as they are owned by HP. Websites have, in the past, been served with cease and desist orders from HP for hosting iLO binaries. For security purposes, I encourage you to follow the steps listed to build the patched version of the iLO yourself, while verifying the contents of the patched code.
 
 ## Getting Started
-Python 2.7 is required. I built everything on CentOS 8; Other OS/environments might have different requirements. If your setup takes extra effort, please let me know and I'll document it.
+Python 3 is required. Python 3.10 or newer is recommended.
 
 _pro tip! if you're doing this all on a Live CD to flash, make sure you disable iLO security first, or you'll have to restart. See Flashing Firmware for more info_
 
@@ -19,14 +19,12 @@ Here is my setup for my Ubuntu 22.04 Live CD (as of 2024-12-12):
 ```bash
 sudo apt-add-repository universe
 sudo apt update
-sudo apt-get install python2-minimal git curl
-curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && sudo python2 get-pip.py
-python2 -m pip install virtualenv
+sudo apt-get install python3 python3-pip python3-venv git curl
 git clone --recurse-submodules https://github.com/kendallgoto/ilo4_unlock.git
 cd ilo4_unlock
-python2 -m virtualenv venv
+python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 Or using docker for the build enviroment (works on any distribution):
 ```bash
